@@ -5,4 +5,5 @@ python-dotenv==1.0.1
 pydantic-settings
 sqlalchemy>=2.0.0
 psycopg[binary]
+psycopg2-binary
 alembic
