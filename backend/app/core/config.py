@@ -1,8 +1,8 @@
 from pydantic_settings import BaseSettings
 
-
+    
 class Settings(BaseSettings):
-    APP_NAME: str = "MZ Essence API"
+    APP_NAME: str = "MZ Essence APIs"
     VERSION: str = "1.0.0"
     DATABASE_URL: str
 
