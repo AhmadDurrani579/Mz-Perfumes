@@ -77,23 +77,96 @@ button { font: inherit; }
   line-height: 1;
 }
 .announcement {
-  display: flex;
-  min-height: 57px;
+  position: relative;
+  display: grid;
+  min-height: 300px;
+  overflow: hidden;
+  color: #fff4e6;
+  background:
+    linear-gradient(90deg, rgba(6, 6, 7, .98) 0%, rgba(12, 9, 7, .94) 38%, rgba(12, 9, 7, .35) 63%, rgba(12, 9, 7, .08) 100%),
+    #0b0908;
+  border-bottom: 1px solid #352318;
+}
+.announcement-content {
+  position: relative;
+  z-index: 1;
+  width: min(620px, calc(100% - 48px));
+  padding: 31px 0 34px clamp(28px, 7vw, 118px);
+}
+.announcement-eyebrow {
+  margin: 0 0 8px;
+  color: #d9b674;
+  font-family: var(--font-display);
+  font-size: 19px;
+  letter-spacing: .18em;
+}
+.announcement-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(42px, 5.2vw, 76px);
+  line-height: .92;
+  letter-spacing: .04em;
+}
+.announcement-title span, .announcement-offer strong { color: #e5bd73; }
+.announcement-offer {
+  margin: 13px 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(24px, 2.8vw, 43px);
+  letter-spacing: .07em;
+  line-height: 1;
+}
+.announcement-copy {
+  margin: 7px 0 0;
+  font-size: clamp(13px, 1.35vw, 19px);
+  letter-spacing: .08em;
+}
+.announcement-perks {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  max-width: 500px;
+  margin-top: 26px;
+  padding-top: 16px;
+  gap: 14px;
+  border-top: 1px solid rgba(229, 193, 132, .45);
+}
+.announcement-perks span {
+  color: #f8ead4;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+.announcement-button {
+  display: inline-flex;
+  min-width: 206px;
+  min-height: 53px;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  padding: 10px 24px;
-  color: #fff4e6;
-  text-align: center;
-  background: #5a1023;
-  border-bottom: 1px solid #9a314a;
-  font-size: 17px;
-  line-height: 1.45;
+  gap: 18px;
+  margin-top: 27px;
+  padding: 14px 27px;
+  color: #1c1009;
+  background: var(--color-accent);
+  border-radius: 4px;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  transition: background-color 160ms ease, transform 160ms ease;
 }
-.announcement strong, .announcement a { color: #f0ca82; font-weight: 700; }
-.announcement-dot { color: #d7ad69; }
-.announcement a { margin-left: 8px; text-decoration: underline; text-underline-offset: 4px; text-transform: uppercase; }
-.announcement a:hover { color: #fff0c8; }
+.announcement-button:hover { background: #f0ce93; transform: translateY(-2px); }
+.announcement-media {
+  position: absolute;
+  inset: 0 0 0 38%;
+}
+.announcement-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
 .brand:focus-visible, .primary-nav a:focus-visible, .cart-button:focus-visible, .announcement a:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 5px;
@@ -191,10 +264,33 @@ button { font: inherit; }
   .cart-button { grid-column: 2; grid-row: 1; }
   .primary-nav { grid-column: 1 / -1; grid-row: 2; justify-content: center; gap: clamp(20px, 8vw, 40px); }
   .primary-nav a { font-size: 13px; }
-  .announcement { gap: 7px 12px; padding: 12px 18px; flex-wrap: wrap; font-size: 14px; }
-  .announcement > span:first-child { width: 100%; overflow-wrap: anywhere; }
-  .announcement-dot { display: none; }
-  .announcement a { width: 100%; margin-left: 0; }
+  .announcement {
+    min-height: 470px;
+    background:
+      linear-gradient(180deg, rgba(6, 6, 7, .96) 0%, rgba(8, 7, 6, .86) 49%, rgba(8, 7, 6, .28) 100%),
+      #0b0908;
+  }
+  .announcement-content {
+    width: min(100% - 36px, 430px);
+    padding: 28px 0 270px;
+    justify-self: center;
+    text-align: center;
+  }
+  .announcement-eyebrow { font-size: 14px; }
+  .announcement-title { font-size: clamp(38px, 13vw, 56px); }
+  .announcement-offer { font-size: clamp(24px, 8vw, 34px); }
+  .announcement-copy { font-size: 12px; }
+  .announcement-perks {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: 18px;
+    gap: 9px 14px;
+  }
+  .announcement-button { width: min(100%, 220px); min-width: 0; }
+  .announcement-media {
+    inset: auto 0 0;
+    height: 265px;
+  }
+  .announcement-media img { object-position: center bottom; }
   .hero { width: min(100% - 36px, 560px); padding: 58px 0 72px; gap: 48px; }
   .hero-eyebrow { margin-bottom: 22px; font-size: 12px; }
   .hero h1 { font-size: clamp(46px, 15vw, 64px); }
