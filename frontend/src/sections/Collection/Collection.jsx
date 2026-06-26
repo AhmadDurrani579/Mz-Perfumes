@@ -1,14 +1,31 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import ProductCard from '../../components/ProductCard/ProductCard.jsx'
 import { products } from '../../data/products.js'
-import { filterProducts } from '../../utils/productCollection.js'
+import { getCategories } from '../../services/api.js'
 import './Collection.css'
 
-const houses = ['All Houses', ...products.map((product) => product.house)]
+const allCategory = { id: 'all', name: 'All Categories' }
 
 export default function Collection() {
-  const [activeHouse, setActiveHouse] = useState('All Houses')
-  const visibleProducts = filterProducts(products, activeHouse)
+  const [categories, setCategories] = useState([])
+  const [activeCategoryId, setActiveCategoryId] = useState(allCategory.id)
+  const categoryFilters = [allCategory, ...categories]
+
+  useEffect(() => {
+    let isMounted = true
+
+    getCategories()
+      .then((data) => {
+        if (isMounted) setCategories(data)
+      })
+      .catch(() => {
+        if (isMounted) setCategories([])
+      })
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
 
   return (
     <section id="collection" className="collection-section" aria-labelledby="collection-title">
@@ -18,22 +35,22 @@ export default function Collection() {
           <h2 id="collection-title">Six houses. One shelf.</h2>
         </header>
 
-        <div className="collection-filters" aria-label="Filter collection by house">
-          {houses.map((house) => (
+        <div className="collection-filters" aria-label="Filter collection by category">
+          {categoryFilters.map((category) => (
             <button
-              key={house}
+              key={category.id}
               type="button"
               className="collection-filter"
-              aria-pressed={activeHouse === house}
-              onClick={() => setActiveHouse(house)}
+              aria-pressed={activeCategoryId === category.id}
+              onClick={() => setActiveCategoryId(category.id)}
             >
-              {house}
+              {category.name}
             </button>
           ))}
         </div>
 
         <div className="product-grid">
-          {visibleProducts.map((product) => (
+          {products.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
