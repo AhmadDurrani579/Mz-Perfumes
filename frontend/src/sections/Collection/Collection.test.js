@@ -4,8 +4,8 @@ import { test } from 'node:test'
 
 const source = readFileSync(new URL('./Collection.jsx', import.meta.url), 'utf8')
 
-test('loads category filters from the backend API', () => {
-  assert.match(source, /getCategories/)
-  assert.match(source, /setCategories/)
-  assert.match(source, /category\.name/)
+test('loads brand filters from the backend API', () => {
+  assert.match(source, /getBrands/)
+  assert.match(source, /setBrands/)
+  assert.match(source, /brand\.name/)
 })

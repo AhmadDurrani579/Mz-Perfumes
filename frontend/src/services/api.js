@@ -10,6 +10,6 @@ export async function apiRequest(path, options = {}) {
   return response.json()
 }
 
-export function getCategories() {
-  return apiRequest('/api/categories/')
+export function getBrands() {
+  return apiRequest('/api/brands/')
 }

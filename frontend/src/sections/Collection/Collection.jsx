@@ -1,25 +1,25 @@
 import { useEffect, useState } from 'react'
 import ProductCard from '../../components/ProductCard/ProductCard.jsx'
 import { products } from '../../data/products.js'
-import { getCategories } from '../../services/api.js'
+import { getBrands } from '../../services/api.js'
 import './Collection.css'
 
-const allCategory = { id: 'all', name: 'All Categories' }
+const allBrand = { id: 'all', name: 'All Brands' }
 
 export default function Collection() {
-  const [categories, setCategories] = useState([])
-  const [activeCategoryId, setActiveCategoryId] = useState(allCategory.id)
-  const categoryFilters = [allCategory, ...categories]
+  const [brands, setBrands] = useState([])
+  const [activeBrandId, setActiveBrandId] = useState(allBrand.id)
+  const brandFilters = [allBrand, ...brands]
 
   useEffect(() => {
     let isMounted = true
 
-    getCategories()
+    getBrands()
       .then((data) => {
-        if (isMounted) setCategories(data)
+        if (isMounted) setBrands(data)
       })
       .catch(() => {
-        if (isMounted) setCategories([])
+        if (isMounted) setBrands([])
       })
 
     return () => {
@@ -35,16 +35,16 @@ export default function Collection() {
           <h2 id="collection-title">Six houses. One shelf.</h2>
         </header>
 
-        <div className="collection-filters" aria-label="Filter collection by category">
-          {categoryFilters.map((category) => (
+        <div className="collection-filters" aria-label="Filter collection by brand">
+          {brandFilters.map((brand) => (
             <button
-              key={category.id}
+              key={brand.id}
               type="button"
               className="collection-filter"
-              aria-pressed={activeCategoryId === category.id}
-              onClick={() => setActiveCategoryId(category.id)}
+              aria-pressed={activeBrandId === brand.id}
+              onClick={() => setActiveBrandId(brand.id)}
             >
-              {category.name}
+              {brand.name}
             </button>
           ))}
         </div>
