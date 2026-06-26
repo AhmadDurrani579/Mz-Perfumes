@@ -10,12 +10,12 @@ export default function AnnouncementBar() {
         <p className="announcement-copy">ON SELECTED LUXURY PERFUMES</p>
         <div className="announcement-rule" aria-hidden="true"><span /></div>
         <div className="announcement-perks" aria-label="Promotion benefits">
-          <span><i aria-hidden="true" />Premium<br />quality</span>
-          <span><i aria-hidden="true" />Free<br />shipping</span>
-          <span><i aria-hidden="true" />100%<br />authentic</span>
-          <span><i aria-hidden="true" />Easy<br />returns</span>
+          <span><i className="perk-icon-quality" aria-hidden="true" />Premium<br />quality</span>
+          <span><i className="perk-icon-shipping" aria-hidden="true" />Free<br />shipping</span>
+          <span><i className="perk-icon-authentic" aria-hidden="true" />100%<br />authentic</span>
+          <span><i className="perk-icon-returns" aria-hidden="true" />Easy<br />returns</span>
         </div>
-        <a className="announcement-button" href="#collection">SHOP NOW <span aria-hidden="true">-&gt;</span></a>
+        <a className="announcement-button" href="#collection">SHOP NOW <span aria-hidden="true">&rarr;</span></a>
       </div>
       <div className="announcement-media" aria-hidden="true">
         <img src={promotionImage} alt="" />
