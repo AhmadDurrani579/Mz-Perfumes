@@ -222,8 +222,8 @@ button { font: inherit; }
   inset: 0;
   z-index: 1;
   background:
-    linear-gradient(90deg, rgba(5, 6, 8, .9) 0%, rgba(5, 6, 8, .84) 32%, rgba(5, 6, 8, .48) 48%, rgba(5, 6, 8, .08) 67%, rgba(5, 6, 8, 0) 100%),
-    linear-gradient(180deg, rgba(0, 0, 0, .24) 0%, rgba(0, 0, 0, .02) 42%, rgba(0, 0, 0, .2) 100%),
+    linear-gradient(90deg, rgba(5, 6, 8, .94) 0%, rgba(5, 6, 8, .88) 31%, rgba(5, 6, 8, .5) 52%, rgba(5, 6, 8, .2) 72%, rgba(5, 6, 8, .08) 100%),
+    linear-gradient(180deg, rgba(0, 0, 0, .34) 0%, rgba(0, 0, 0, .06) 42%, rgba(0, 0, 0, .28) 100%),
     radial-gradient(circle at 10% 84%, rgba(218, 164, 78, .22), transparent 18%);
   pointer-events: none;
 }
@@ -426,14 +426,16 @@ button { font: inherit; }
   position: absolute;
   inset: 0;
   z-index: 0;
+  background: #090807;
 }
 .announcement-media img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
-  filter: saturate(1.08) contrast(1.08) brightness(1.04);
+  object-position: right center;
+  opacity: .72;
+  filter: saturate(1.06) contrast(1.04);
 }
 .brand:focus-visible, .primary-nav a:focus-visible, .cart-button:focus-visible, .announcement a:focus-visible, .top-sale-button:focus-visible {
   outline: 2px solid var(--color-accent);
@@ -600,7 +602,11 @@ button { font: inherit; }
     inset: auto 0 0;
     height: 275px;
   }
-  .announcement-media img { object-position: center bottom; }
+  .announcement-media img {
+    object-fit: cover;
+    object-position: center bottom;
+    opacity: .64;
+  }
   .hero { width: min(100% - 36px, 560px); padding: 58px 0 72px; gap: 48px; }
   .hero-eyebrow { margin-bottom: 22px; font-size: 12px; }
   .hero h1 { font-size: clamp(46px, 15vw, 64px); }
