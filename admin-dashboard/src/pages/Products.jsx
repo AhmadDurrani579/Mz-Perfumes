@@ -6,30 +6,33 @@ import { api } from "../api/api";
 
 const columns = [
   { key: "name", label: "Product" },
-  { key: "sku", label: "SKU" },
-  { key: "brand", label: "Brand" },
-  { key: "category", label: "Category" },
-  { key: "price", label: "Price", render: (r) => `£${r.price ?? "0.00"}` },
-  { key: "stock", label: "Stock" },
-  { key: "status", label: "Status", type: "status" },
+  { key: "slug", label: "Slug" },
+  { key: "actual_price", label: "Actual Price", render: (r) => `PKR ${r.actual_price ?? 0}` },
+  { key: "discount_price", label: "Discount Price", render: (r) => `PKR ${r.discount_price ?? 0}` },
+  { key: "stock_quantity", label: "Stock" },
+  { key: "size", label: "Size" },
+  { key: "gender", label: "Gender" },
+  { key: "product_type", label: "Type" },
+  { key: "is_active", label: "Status", render: (r) => (r.is_active ? "Active" : "Inactive") },
 ];
 
 const fields = [
   { name: "name", label: "Product name", required: true },
-  { name: "sku", label: "SKU", required: true },
-  { name: "brand", label: "Brand" },
-  { name: "category", label: "Category" },
-  { name: "price", label: "Price", type: "number", required: true },
-  { name: "stock", label: "Stock quantity", type: "number" },
-  {
-    name: "status",
-    label: "Status",
-    type: "select",
-    options: ["active", "inactive"],
-    default: "active",
-  },
-  { name: "image_url", label: "Image URL" },
+  { name: "slug", label: "Slug", required: true },
+
+  { name: "actual_price", label: "Actual Price", type: "number", required: true },
+  { name: "discount_price", label: "Discount Price", type: "number" },
+  { name: "stock_quantity", label: "Stock Quantity", type: "number" },
+
+  { name: "size", label: "Size" },
+  { name: "gender", label: "Gender" },
+  { name: "product_type", label: "Product Type" },
+
+  { name: "main_image_url", label: "Image URL" },
   { name: "description", label: "Description", type: "textarea" },
+
+  { name: "is_active", label: "Active", type: "checkbox" },
+  { name: "is_featured", label: "Featured", type: "checkbox" },
 ];
 
 export default function Products() {
@@ -40,7 +43,7 @@ export default function Products() {
       resourceApi={api.products}
       columns={columns}
       fields={fields}
-      searchKeys={["name", "sku", "brand", "category"]}
+      searchKeys={["name", "slug", "gender", "product_type", "size"]}
       searchPlaceholder="Search products…"
       DataTable={DataTable}
       ModalForm={ModalForm}

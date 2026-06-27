@@ -7,20 +7,19 @@ import { api } from "../api/api";
 const columns = [
   { key: "name", label: "Category" },
   { key: "slug", label: "Slug" },
-  { key: "status", label: "Status", type: "status" },
+  { key: "description", label: "Description" },
+  {
+    key: "is_active",
+    label: "Status",
+    render: (r) => (r.is_active ? "Active" : "Inactive"),
+  },
 ];
 
 const fields = [
   { name: "name", label: "Category name", required: true },
-  { name: "slug", label: "Slug" },
-  {
-    name: "status",
-    label: "Status",
-    type: "select",
-    options: ["active", "inactive"],
-    default: "active",
-  },
+  { name: "slug", label: "Slug", required: true },
   { name: "description", label: "Description", type: "textarea" },
+  { name: "is_active", label: "Active", type: "checkbox" },
 ];
 
 export default function Categories() {

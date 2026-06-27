@@ -7,28 +7,22 @@ import { api } from "../api/api";
 
 const columns = [
   { key: "title", label: "Promotion" },
-  { key: "code", label: "Code" },
+  { key: "promotion_scope", label: "Scope" },
+  { key: "discount_type", label: "Discount Type" },
   {
-    key: "discount_percent",
+    key: "discount_value",
     label: "Discount",
-    render: (r) => (r.discount_percent ? `${r.discount_percent}%` : "—"),
+    render: (r) =>
+      r.discount_type === "percentage"
+        ? `${r.discount_value}%`
+        : `PKR ${r.discount_value ?? 0}`,
   },
-  { key: "end_date", label: "Ends" },
-  { key: "status", label: "Status", type: "status" },
-];
-
-const fields = [
-  { name: "title", label: "Promotion title", required: true },
-  { name: "code", label: "Promo code", required: true },
-  { name: "discount_percent", label: "Discount %", type: "number", required: true },
-  { name: "start_date", label: "Start date", type: "date" },
-  { name: "end_date", label: "End date", type: "date" },
+  { key: "start_date", label: "Start" },
+  { key: "end_date", label: "End" },
   {
-    name: "status",
+    key: "is_active",
     label: "Status",
-    type: "select",
-    options: ["active", "scheduled", "expired", "inactive"],
-    default: "active",
+    render: (r) => (r.is_active ? "Active" : "Inactive"),
   },
 ];
 
@@ -41,11 +35,12 @@ function ActivePromotionsStrip() {
     api.promotions
       .activeList()
       .then((data) => {
-        if (live) setActive(Array.isArray(data) ? data : data?.results || []);
+        if (live) setActive(Array.isArray(data) ? data : []);
       })
       .catch((err) => {
         if (live) setError(err.message || "Couldn't load active promotions.");
       });
+
     return () => {
       live = false;
     };
@@ -54,15 +49,21 @@ function ActivePromotionsStrip() {
   return (
     <div className="page__card promotions-strip">
       <h3>Currently active</h3>
+
       {error && <p className="alert alert--error">{error}</p>}
+
       {!error && active.length === 0 && (
         <p className="page__description">No promotions are live right now.</p>
       )}
+
       {!error && active.length > 0 && (
         <div className="chip-row">
           {active.map((promo) => (
             <span className="chip" key={promo.id}>
-              {promo.title} · {promo.code}
+              {promo.title} · {promo.promotion_scope} ·{" "}
+              {promo.discount_type === "percentage"
+                ? `${promo.discount_value}%`
+                : `PKR ${promo.discount_value}`}
             </span>
           ))}
         </div>
@@ -72,16 +73,102 @@ function ActivePromotionsStrip() {
 }
 
 export default function Promotions() {
+  const [brands, setBrands] = useState([]);
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    api.brands.list().then((data) => setBrands(data || [])).catch(console.error);
+    api.products.list().then((data) => setProducts(data || [])).catch(console.error);
+  }, []);
+
+  const fields = [
+    { name: "title", label: "Promotion Title", required: true },
+
+    { name: "description", label: "Description", type: "textarea" },
+
+    {
+      name: "discount_type",
+      label: "Discount Type",
+      type: "select",
+      options: ["percentage", "fixed"],
+      default: "percentage",
+      required: true,
+    },
+
+    {
+      name: "discount_value",
+      label: "Discount Value",
+      type: "number",
+      required: true,
+    },
+
+    {
+      name: "promotion_scope",
+      label: "Promotion Scope",
+      type: "select",
+      options: ["all_products", "brand", "product"],
+      default: "all_products",
+      required: true,
+    },
+
+    {
+      name: "brand_id",
+      label: "Brand",
+      type: "select",
+      options: [
+        { label: "None", value: "" },
+        ...brands.map((brand) => ({
+          label: brand.name,
+          value: brand.id,
+        })),
+      ],
+    },
+
+    {
+      name: "product_id",
+      label: "Product",
+      type: "select",
+      options: [
+        { label: "None", value: "" },
+        ...products.map((product) => ({
+          label: product.name,
+          value: product.id,
+        })),
+      ],
+    },
+
+    { name: "banner_image_url", label: "Banner Image URL" },
+
+    { name: "start_date", label: "Start Date", type: "datetime-local" },
+
+    { name: "end_date", label: "End Date", type: "datetime-local" },
+
+    {
+      name: "apply_to_all",
+      label: "Apply To All",
+      type: "checkbox",
+      default: true,
+    },
+
+    {
+      name: "is_active",
+      label: "Active",
+      type: "checkbox",
+      default: false,
+    },
+  ];
+
   return (
     <>
       <ActivePromotionsStrip />
+
       <CrudPage
         title="Promotions"
-        description="Discount codes and limited-time offers."
+        description="Discounts and limited-time offers."
         resourceApi={api.promotions}
         columns={columns}
         fields={fields}
-        searchKeys={["title", "code"]}
+        searchKeys={["title", "promotion_scope", "discount_type"]}
         searchPlaceholder="Search promotions…"
         DataTable={DataTable}
         ModalForm={ModalForm}

@@ -74,12 +74,23 @@ async function request(path, options = {}) {
 
   if (!res.ok) {
     let message = `Request failed (${res.status})`;
+
     try {
       const data = await res.json();
-      message = data.detail || data.message || message;
+
+      if (Array.isArray(data.detail)) {
+        message = data.detail.map((e) => e.msg).join(", ");
+      } else if (typeof data.detail === "string") {
+        message = data.detail;
+      } else if (data.message) {
+        message = data.message;
+      } else {
+        message = JSON.stringify(data);
+      }
     } catch {
-      /* response wasn't JSON, keep default message */
+      // keep default message
     }
+
     throw new Error(message);
   }
 
@@ -140,19 +151,155 @@ export const api = {
   dashboard: {
     summary: () => request("/api/dashboard/summary"),
   },
-  products: crudResource("/api/products/", "products"),
-  categories: crudResource("/api/categories/", "categories"),
-  brands: crudResource("/api/brands/", "brands"),
-  branches: crudResource("/api/branches/", "branches"),
-  banners: crudResource("/api/banners/", "banners"),
-  promotions: {
-    ...crudResource("/api/promotions/", "promotions"),
-    activeList: () =>
-      isDemoMode()
-        ? mockActivePromotions()
-        : request("/api/promotions/active/list"),
+
+  products: {
+    list: () => request("/api/products/"),
+    get: (id) => request(`/api/products/${id}`),
+    create: (payload) =>
+      request("/api/products/", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      }),
+    update: (id, payload) =>
+      request(`/api/products/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(payload),
+      }),
+    remove: (id) =>
+      request(`/api/products/${id}`, {
+        method: "DELETE",
+      }),
   },
-  affiliates: crudResource("/api/affiliates/", "affiliates"),
+
+  categories: {
+    list: () => request("/api/categories/"),
+
+    get: (id) => request(`/api/categories/${id}`),
+
+    create: (payload) =>
+      request("/api/categories/", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      }),
+
+    update: (id, payload) =>
+      request(`/api/categories/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(payload),
+      }),
+
+    remove: (id) =>
+      request(`/api/categories/${id}`, {
+        method: "DELETE",
+      }),
+  },
+
+  brands: {
+    list: () => request("/api/brands/"),
+
+    get: (id) => request(`/api/brands/${id}`),
+
+    create: (payload) =>
+      request("/api/brands/", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      }),
+
+    update: (id, payload) =>
+      request(`/api/brands/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(payload),
+      }),
+
+    remove: (id) =>
+      request(`/api/brands/${id}`, {
+        method: "DELETE",
+      }),
+  },
+
+  branches: {
+    list: () => request("/api/branches/"),
+    get: (id) => request(`/api/branches/${id}`),
+    create: (payload) =>
+      request("/api/branches/", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      }),
+    update: (id, payload) =>
+      request(`/api/branches/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(payload),
+      }),
+    remove: (id) =>
+      request(`/api/branches/${id}`, {
+        method: "DELETE",
+      }),
+  },
+
+  banners: {
+    list: () => request("/api/banners/"),
+
+    get: (id) => request(`/api/banners/${id}`),
+
+    create: (payload) =>
+      request("/api/banners/", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      }),
+
+    update: (id, payload) =>
+      request(`/api/banners/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(payload),
+      }),
+
+    remove: (id) =>
+      request(`/api/banners/${id}`, {
+        method: "DELETE",
+      }),
+  },
+  promotions: {
+    list: () => request("/api/promotions/"),
+    get: (id) => request(`/api/promotions/${id}`),
+    create: (payload) =>
+      request("/api/promotions/", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      }),
+    update: (id, payload) =>
+      request(`/api/promotions/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(payload),
+      }),
+    remove: (id) =>
+      request(`/api/promotions/${id}`, {
+        method: "DELETE",
+      }),
+    activeList: () => request("/api/promotions/active/list"),
+  },
+
+  affiliates: {
+    list: () => request("/api/affiliates/"),
+
+    get: (id) => request(`/api/affiliates/${id}`),
+
+    create: (payload) =>
+      request("/api/affiliates/", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      }),
+
+    update: (id, payload) =>
+      request(`/api/affiliates/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(payload),
+      }),
+
+    remove: (id) =>
+      request(`/api/affiliates/${id}`, {
+        method: "DELETE",
+      }),
+  },
   orders: crudResource("/api/orders/", "orders"),
   partnerBrands: crudResource("/api/partner-brands/", "partnerBrands"),
   partnerProducts: crudResource("/api/partner-products/", "partnerProducts"),

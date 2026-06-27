@@ -6,22 +6,26 @@ import { api } from "../api/api";
 
 const columns = [
   { key: "name", label: "Brand" },
-  { key: "country", label: "Country" },
-  { key: "status", label: "Status", type: "status" },
+  { key: "slug", label: "Slug" },
+  { key: "description", label: "Description" },
+  {
+    key: "is_active",
+    label: "Status",
+    render: (r) => (r.is_active ? "Active" : "Inactive"),
+  },
 ];
 
 const fields = [
   { name: "name", label: "Brand name", required: true },
-  { name: "country", label: "Country of origin" },
+  { name: "slug", label: "Slug", required: true },
   { name: "logo_url", label: "Logo URL" },
-  {
-    name: "status",
-    label: "Status",
-    type: "select",
-    options: ["active", "inactive"],
-    default: "active",
-  },
   { name: "description", label: "About this brand", type: "textarea" },
+  {
+    name: "is_active",
+    label: "Active",
+    type: "checkbox",
+    default: false,
+  },
 ];
 
 export default function Brands() {
@@ -32,7 +36,7 @@ export default function Brands() {
       resourceApi={api.brands}
       columns={columns}
       fields={fields}
-      searchKeys={["name", "country"]}
+      searchKeys={["name", "slug", "description"]}
       searchPlaceholder="Search brands…"
       DataTable={DataTable}
       ModalForm={ModalForm}

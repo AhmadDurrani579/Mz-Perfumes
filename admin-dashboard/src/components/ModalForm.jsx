@@ -19,8 +19,14 @@ export default function ModalForm({
     if (open) {
       const defaults = {};
       fields.forEach((f) => {
-        defaults[f.name] = initialValues[f.name] ?? f.default ?? "";
-      });
+        if (f.type === "checkbox") {
+          defaults[f.name] =
+            initialValues[f.name] ?? f.default ?? false;
+        } else {
+          defaults[f.name] =
+            initialValues[f.name] ?? f.default ?? "";
+        }
+      });     
       setValues(defaults);
     }
   }, [open, initialValues, fields]);
@@ -54,7 +60,6 @@ export default function ModalForm({
                   {field.label}
                   {field.required && <span className="field__required">*</span>}
                 </label>
-
                 {field.type === "select" ? (
                   <select
                     id={field.name}
@@ -65,30 +70,43 @@ export default function ModalForm({
                     <option value="" disabled>
                       Select {field.label.toLowerCase()}
                     </option>
-                    {field.options.map((opt) => (
-                      <option key={opt} value={opt}>
-                        {opt}
-                      </option>
-                    ))}
+
+                    {field.options.map((opt) => {
+                      const value = typeof opt === "object" ? opt.value : opt;
+                      const label = typeof opt === "object" ? opt.label : opt;
+
+                      return (
+                        <option key={value} value={value}>
+                          {label}
+                        </option>
+                      );
+                    })}
                   </select>
                 ) : field.type === "textarea" ? (
-                  <textarea
-                    id={field.name}
-                    rows={3}
-                    value={values[field.name] ?? ""}
-                    required={field.required}
-                    onChange={(e) => handleChange(field.name, e.target.value)}
-                  />
-                ) : (
-                  <input
-                    id={field.name}
-                    type={field.type || "text"}
-                    step={field.type === "number" ? "0.01" : undefined}
-                    value={values[field.name] ?? ""}
-                    required={field.required}
-                    onChange={(e) => handleChange(field.name, e.target.value)}
-                  />
-                )}
+                <textarea
+                id={field.name}
+                rows={3}
+                value={values[field.name] ?? ""}
+                required={field.required}
+                onChange={(e) => handleChange(field.name, e.target.value)}
+              />
+            ) : field.type === "checkbox" ? (
+              <input
+                id={field.name}
+                type="checkbox"
+                checked={Boolean(values[field.name])}
+                onChange={(e) => handleChange(field.name, e.target.checked)}
+              />
+            ) : (
+              <input
+                id={field.name}
+                type={field.type || "text"}
+                step={field.type === "number" ? "0.01" : undefined}
+                value={values[field.name] ?? ""}
+                required={field.required}
+                onChange={(e) => handleChange(field.name, e.target.value)}
+              />
+            )}
               </div>
             ))}
           </div>

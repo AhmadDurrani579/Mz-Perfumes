@@ -5,28 +5,66 @@ import ModalForm from "../components/ModalForm";
 import { api } from "../api/api";
 
 const columns = [
-  { key: "name", label: "Affiliate" },
+  { key: "affiliate_code", label: "Code" },
+  { key: "full_name", label: "Full Name" },
   { key: "email", label: "Email" },
-  { key: "code", label: "Referral code" },
-  {
-    key: "commission_rate",
-    label: "Commission",
-    render: (r) => (r.commission_rate ? `${r.commission_rate}%` : "—"),
-  },
+  { key: "phone_number", label: "Phone" },
+  { key: "city", label: "City" },
   { key: "status", label: "Status", type: "status" },
+  {
+    key: "is_active",
+    label: "Active",
+    render: (r) => (r.is_active ? "Yes" : "No"),
+  },
 ];
 
 const fields = [
-  { name: "name", label: "Full name", required: true },
-  { name: "email", label: "Email", type: "email", required: true },
-  { name: "code", label: "Referral code", required: true },
-  { name: "commission_rate", label: "Commission %", type: "number" },
+  { name: "full_name", label: "Full Name", required: true },
+
+  {
+    name: "phone_number",
+    label: "Phone Number",
+    required: true,
+  },
+
+  {
+    name: "email",
+    label: "Email",
+    type: "email",
+    required: true,
+  },
+
+  {
+    name: "instagram_username",
+    label: "Instagram Username",
+  },
+
+  {
+    name: "tiktok_username",
+    label: "TikTok Username",
+  },
+
+  { name: "city", label: "City" },
+
+  {
+    name: "reason",
+    label: "Reason",
+    type: "textarea",
+  },
+
   {
     name: "status",
     label: "Status",
     type: "select",
-    options: ["active", "pending", "inactive"],
+    options: ["pending", "approved", "rejected"],
     default: "pending",
+  },
+
+  {
+    name: "is_active",
+    label: "Active",
+    type: "checkbox",
+    default: true,
   },
 ];
 
@@ -38,7 +76,12 @@ export default function Affiliates() {
       resourceApi={api.affiliates}
       columns={columns}
       fields={fields}
-      searchKeys={["name", "email", "code"]}
+      searchKeys={[
+        "affiliate_code",
+        "full_name",
+        "email",
+        "city",
+      ]}
       searchPlaceholder="Search affiliates…"
       DataTable={DataTable}
       ModalForm={ModalForm}

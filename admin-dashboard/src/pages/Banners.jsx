@@ -5,28 +5,40 @@ import ModalForm from "../components/ModalForm";
 import { api } from "../api/api";
 
 const columns = [
-  { key: "title", label: "Banner" },
-  { key: "position", label: "Position" },
-  { key: "link_url", label: "Link" },
-  { key: "status", label: "Status", type: "status" },
+  { key: "title", label: "Title" },
+  { key: "subtitle", label: "Subtitle" },
+  { key: "redirect_url", label: "Redirect URL" },
+  { key: "start_date", label: "Start Date" },
+  { key: "end_date", label: "End Date" },
+  {
+    key: "is_active",
+    label: "Status",
+    render: (r) => (r.is_active ? "Active" : "Inactive"),
+  },
 ];
 
 const fields = [
-  { name: "title", label: "Title", required: true },
+  { name: "title", label: "Banner Title", required: true },
+  { name: "subtitle", label: "Subtitle" },
   { name: "image_url", label: "Image URL", required: true },
-  { name: "link_url", label: "Link URL" },
+  { name: "redirect_url", label: "Redirect URL" },
+
   {
-    name: "position",
-    label: "Position",
-    type: "select",
-    options: ["home_hero", "home_secondary", "category_top", "checkout"],
+    name: "start_date",
+    label: "Start Date",
+    type: "datetime-local",
   },
   {
-    name: "status",
-    label: "Status",
-    type: "select",
-    options: ["active", "inactive"],
-    default: "active",
+    name: "end_date",
+    label: "End Date",
+    type: "datetime-local",
+  },
+
+  {
+    name: "is_active",
+    label: "Active",
+    type: "checkbox",
+    default: false,
   },
 ];
 
