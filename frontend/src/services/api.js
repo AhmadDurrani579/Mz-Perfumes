@@ -17,3 +17,7 @@ export function getBrands() {
 export function getProducts() {
   return apiRequest('/api/products/')
 }
+
+export function getBanners() {
+  return apiRequest('/api/banners/')
+}

@@ -11,3 +11,11 @@ test('renders the summer sale promotion banner with the perfume image', () => {
   assert.match(source, /50% OFF/)
   assert.match(source, /SHOP NOW/)
 })
+
+test('loads active banner content from the backend API', () => {
+  assert.match(source, /getBanners/)
+  assert.match(source, /setBanner/)
+  assert.match(source, /image_url/)
+  assert.match(source, /is_active/)
+  assert.match(source, /redirect_url/)
+})
