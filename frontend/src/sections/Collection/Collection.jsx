@@ -18,6 +18,7 @@ function mapBackendProduct(product) {
 
   return {
     id: product.id,
+    brandId: product.brand_id,
     house: product.brand_name ?? product.brand ?? '',
     name: product.name,
     description: product.description ?? '',
@@ -33,6 +34,10 @@ export default function Collection() {
   const [products, setProducts] = useState([])
   const [activeBrandId, setActiveBrandId] = useState(allBrand.id)
   const brandFilters = [allBrand, ...brands]
+  const visibleProducts =
+    activeBrandId === allBrand.id
+      ? products
+      : products.filter((product) => product.brandId === activeBrandId)
 
   useEffect(() => {
     let isMounted = true
@@ -81,7 +86,7 @@ export default function Collection() {
         </div>
 
         <div className="product-grid">
-          {products.map((product) => (
+          {visibleProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>

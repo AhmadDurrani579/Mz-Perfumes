@@ -15,3 +15,9 @@ test('loads products from the backend API', () => {
   assert.match(source, /setProducts/)
   assert.match(source, /mapBackendProduct/)
 })
+
+test('filters products by selected brand', () => {
+  assert.match(source, /brandId: product\.brand_id/)
+  assert.match(source, /visibleProducts/)
+  assert.match(source, /product\.brandId === activeBrandId/)
+})
