@@ -16,6 +16,12 @@ test('loads active banner content from the backend API', () => {
   assert.match(source, /getBanners/)
   assert.match(source, /setBanner/)
   assert.match(source, /image_url/)
-  assert.match(source, /is_active/)
+  assert.match(source, /getActivePromotionBanner/)
   assert.match(source, /redirect_url/)
+})
+
+test('hides the announcement banner when the offer has expired', () => {
+  assert.match(source, /getActivePromotionBanner/)
+  assert.match(source, /setBanner\(activeBanner \?\? null\)/)
+  assert.match(source, /if \(!banner\) return null/)
 })

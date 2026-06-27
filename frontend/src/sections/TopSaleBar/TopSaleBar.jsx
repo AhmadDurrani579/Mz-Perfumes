@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { getBanners } from '../../services/api.js'
+import { getActivePromotionBanner, isBannerExpired } from '../../utils/bannerPromotion.js'
 
 const fallbackBanner = {
   title: 'SUMMER SALE!',
@@ -14,10 +15,6 @@ const fallbackCountdown = [
   { value: '35', label: 'MINS' },
   { value: '20', label: 'SECS' },
 ]
-
-function getActiveBanner(banners) {
-  return banners.find((banner) => banner.is_active !== false)
-}
 
 function getCountdownItems(endDate, currentTime) {
   if (!endDate) return fallbackCountdown
@@ -54,19 +51,16 @@ function getSubtitleParts(subtitle) {
 }
 
 export default function TopSaleBar() {
-  const [banner, setBanner] = useState(fallbackBanner)
+  const [banner, setBanner] = useState(null)
   const [currentTime, setCurrentTime] = useState(0)
-  const countdown = getCountdownItems(banner.end_date, currentTime)
-  const subtitleParts = getSubtitleParts(banner.subtitle ?? fallbackBanner.subtitle)
-  const buttonUrl = banner.redirect_url || '#collection'
 
   useEffect(() => {
     let isMounted = true
 
     getBanners()
       .then((banners) => {
-        const activeBanner = getActiveBanner(banners)
-        if (isMounted && activeBanner) setBanner(activeBanner)
+        const activeBanner = getActivePromotionBanner(banners, Date.now())
+        if (isMounted) setBanner(activeBanner ?? null)
       })
       .catch(() => {
         if (isMounted) setBanner(fallbackBanner)
@@ -78,7 +72,7 @@ export default function TopSaleBar() {
   }, [])
 
   useEffect(() => {
-    if (!banner.end_date) return undefined
+    if (!banner?.end_date) return undefined
 
     const firstTick = window.setTimeout(() => setCurrentTime(Date.now()), 0)
     const timer = window.setInterval(() => setCurrentTime(Date.now()), 1000)
@@ -87,7 +81,14 @@ export default function TopSaleBar() {
       window.clearTimeout(firstTick)
       window.clearInterval(timer)
     }
-  }, [banner.end_date])
+  }, [banner?.end_date])
+
+  if (!banner) return null
+  if (currentTime && isBannerExpired(banner, currentTime)) return null
+
+  const countdown = getCountdownItems(banner.end_date, currentTime)
+  const subtitleParts = getSubtitleParts(banner.subtitle ?? fallbackBanner.subtitle)
+  const buttonUrl = banner.redirect_url || '#collection'
 
   return (
     <aside className="top-sale-bar" aria-label="Summer sale announcement">

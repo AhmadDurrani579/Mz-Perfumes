@@ -1,16 +1,13 @@
 import { useEffect, useState } from 'react'
 import promotionImage from '../../assets/images/image.png'
 import { getBanners } from '../../services/api.js'
+import { getActivePromotionBanner, isBannerExpired } from '../../utils/bannerPromotion.js'
 
 const fallbackBanner = {
   title: 'SUMMER SALE',
   subtitle: 'UP TO 50% OFF ON SELECTED LUXURY PERFUMES',
   image_url: promotionImage,
   redirect_url: '#collection',
-}
-
-function getActiveBanner(banners) {
-  return banners.find((banner) => banner.is_active !== false)
 }
 
 function getBannerTitleParts(title) {
@@ -35,19 +32,16 @@ function getBannerOffer(subtitle) {
 }
 
 export default function AnnouncementBar() {
-  const [banner, setBanner] = useState(fallbackBanner)
-  const titleParts = getBannerTitleParts(banner.title)
-  const bannerOffer = getBannerOffer(banner.subtitle ?? fallbackBanner.subtitle)
-  const imageUrl = banner.image_url || promotionImage
-  const buttonUrl = banner.redirect_url || '#collection'
+  const [banner, setBanner] = useState(null)
+  const [currentTime, setCurrentTime] = useState(0)
 
   useEffect(() => {
     let isMounted = true
 
     getBanners()
       .then((banners) => {
-        const activeBanner = getActiveBanner(banners)
-        if (isMounted && activeBanner) setBanner(activeBanner)
+        const activeBanner = getActivePromotionBanner(banners, Date.now())
+        if (isMounted) setBanner(activeBanner ?? null)
       })
       .catch(() => {
         if (isMounted) setBanner(fallbackBanner)
@@ -57,6 +51,26 @@ export default function AnnouncementBar() {
       isMounted = false
     }
   }, [])
+
+  useEffect(() => {
+    if (!banner?.end_date) return undefined
+
+    const firstTick = window.setTimeout(() => setCurrentTime(Date.now()), 0)
+    const timer = window.setInterval(() => setCurrentTime(Date.now()), 1000)
+
+    return () => {
+      window.clearTimeout(firstTick)
+      window.clearInterval(timer)
+    }
+  }, [banner?.end_date])
+
+  if (!banner) return null
+  if (currentTime && isBannerExpired(banner, currentTime)) return null
+
+  const titleParts = getBannerTitleParts(banner.title)
+  const bannerOffer = getBannerOffer(banner.subtitle ?? fallbackBanner.subtitle)
+  const imageUrl = banner.image_url || promotionImage
+  const buttonUrl = banner.redirect_url || '#collection'
 
   return (
     <div className="announcement" role="note" aria-label="Summer sale promotion">

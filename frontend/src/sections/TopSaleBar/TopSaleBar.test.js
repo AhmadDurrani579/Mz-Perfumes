@@ -26,3 +26,9 @@ test('loads top bar title, subtitle, and end date from backend banners', () => {
   assert.match(source, /banner\.end_date/)
   assert.match(source, /getCountdownItems/)
 })
+
+test('hides the top bar when the offer has expired', () => {
+  assert.match(source, /getActivePromotionBanner/)
+  assert.match(source, /setBanner\(activeBanner \?\? null\)/)
+  assert.match(source, /if \(!banner\) return null/)
+})
