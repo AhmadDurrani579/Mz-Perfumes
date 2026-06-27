@@ -17,3 +17,12 @@ test('renders the compact summer sale top bar above the header', () => {
 
   assert.match(appSource, /<TopSaleBar \/>[\s\S]*<Header \/>/)
 })
+
+test('loads top bar title, subtitle, and end date from backend banners', () => {
+  assert.match(source, /getBanners/)
+  assert.match(source, /setBanner/)
+  assert.match(source, /banner\.title/)
+  assert.match(source, /banner\.subtitle/)
+  assert.match(source, /banner\.end_date/)
+  assert.match(source, /getCountdownItems/)
+})
