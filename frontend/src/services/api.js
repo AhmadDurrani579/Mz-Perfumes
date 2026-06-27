@@ -13,3 +13,7 @@ export async function apiRequest(path, options = {}) {
 export function getBrands() {
   return apiRequest('/api/brands/')
 }
+
+export function getProducts() {
+  return apiRequest('/api/products/')
+}

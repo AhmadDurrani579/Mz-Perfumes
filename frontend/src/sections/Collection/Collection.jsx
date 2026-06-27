@@ -1,13 +1,36 @@
 import { useEffect, useState } from 'react'
 import ProductCard from '../../components/ProductCard/ProductCard.jsx'
-import { products } from '../../data/products.js'
-import { getBrands } from '../../services/api.js'
+import fallbackProductImage from '../../assets/images/perfume-hero.png'
+import { getBrands, getProducts } from '../../services/api.js'
 import './Collection.css'
 
 const allBrand = { id: 'all', name: 'All Brands' }
 
+function getDiscountPercent(actualPrice, discountPrice) {
+  if (!actualPrice || !discountPrice || discountPrice >= actualPrice) return 0
+
+  return Math.round(((actualPrice - discountPrice) / actualPrice) * 100)
+}
+
+function mapBackendProduct(product) {
+  const originalPrice = Number(product.actual_price ?? product.price ?? 0)
+  const price = Number(product.discount_price ?? product.actual_price ?? product.price ?? 0)
+
+  return {
+    id: product.id,
+    house: product.brand_name ?? product.brand ?? '',
+    name: product.name,
+    description: product.description ?? '',
+    originalPrice,
+    price,
+    discount: getDiscountPercent(originalPrice, price),
+    image: product.main_image_url || fallbackProductImage,
+  }
+}
+
 export default function Collection() {
   const [brands, setBrands] = useState([])
+  const [products, setProducts] = useState([])
   const [activeBrandId, setActiveBrandId] = useState(allBrand.id)
   const brandFilters = [allBrand, ...brands]
 
@@ -20,6 +43,14 @@ export default function Collection() {
       })
       .catch(() => {
         if (isMounted) setBrands([])
+      })
+
+    getProducts()
+      .then((data) => {
+        if (isMounted) setProducts(data.map(mapBackendProduct))
+      })
+      .catch(() => {
+        if (isMounted) setProducts([])
       })
 
     return () => {

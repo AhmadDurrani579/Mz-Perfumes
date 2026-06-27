@@ -9,3 +9,9 @@ test('loads brand filters from the backend API', () => {
   assert.match(source, /setBrands/)
   assert.match(source, /brand\.name/)
 })
+
+test('loads products from the backend API', () => {
+  assert.match(source, /getProducts/)
+  assert.match(source, /setProducts/)
+  assert.match(source, /mapBackendProduct/)
+})
