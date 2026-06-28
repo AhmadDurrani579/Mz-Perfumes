@@ -2,14 +2,9 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 
 
-def generate_product_code(db: Session, partner_brand_id: str):
+def generate_product_code(db: Session):
     result = db.execute(
-        text("""
-            SELECT COUNT(*)
-            FROM partner_products
-            WHERE partner_brand_id = :partner_brand_id
-        """),
-        {"partner_brand_id": partner_brand_id}
+        text("SELECT COUNT(*) FROM partner_products")
     )
 
     count = result.scalar() or 0
@@ -32,11 +27,7 @@ def get_partner_product_by_id(db: Session, partner_product_id: str):
 
 
 def create_partner_product(db: Session, partner_product_data: dict):
-    partner_product_data["product_code"] = generate_product_code(
-        db,
-        partner_product_data["partner_brand_id"]
-    )
-
+    partner_product_data["product_code"] = generate_product_code(db)
     query = text("""
         INSERT INTO partner_products (
             partner_brand_id,
