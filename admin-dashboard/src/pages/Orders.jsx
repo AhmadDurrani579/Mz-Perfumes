@@ -1,39 +1,95 @@
 // src/pages/Orders.jsx
+import { useEffect, useState } from "react";
 import CrudPage from "./CrudPage";
 import DataTable from "../components/DataTable";
 import ModalForm from "../components/ModalForm";
 import { api } from "../api/api";
 
 const columns = [
-  { key: "order_number", label: "Order #" },
   { key: "customer_name", label: "Customer" },
-  { key: "total", label: "Total", render: (r) => `£${r.total ?? "0.00"}` },
+  { key: "customer_phone", label: "Phone" },
+  { key: "quantity", label: "Qty" },
+  { key: "size", label: "Size" },
+  {
+    key: "total_amount",
+    label: "Total",
+    render: (r) => `PKR ${r.total_amount ?? 0}`,
+  },
   { key: "payment_status", label: "Payment", type: "status" },
-  { key: "status", label: "Status", type: "status" },
-];
-
-const fields = [
-  { name: "order_number", label: "Order number", required: true },
-  { name: "customer_name", label: "Customer name", required: true },
-  { name: "customer_email", label: "Customer email", type: "email" },
-  { name: "total", label: "Order total", type: "number", required: true },
-  {
-    name: "payment_status",
-    label: "Payment status",
-    type: "select",
-    options: ["paid", "pending", "refunded", "failed"],
-    default: "pending",
-  },
-  {
-    name: "status",
-    label: "Order status",
-    type: "select",
-    options: ["pending", "processing", "completed", "cancelled"],
-    default: "pending",
-  },
+  { key: "delivery_status", label: "Delivery", type: "status" },
+  { key: "city", label: "City" },
 ];
 
 export default function Orders() {
+  const [products, setProducts] = useState([]);
+  const [affiliates, setAffiliates] = useState([]);
+
+  useEffect(() => {
+    api.products
+      .list()
+      .then((data) => setProducts(data || []))
+      .catch(console.error);
+
+    api.affiliates
+      .list()
+      .then((data) => setAffiliates(data || []))
+      .catch(console.error);
+  }, []);
+
+  const fields = [
+    { name: "customer_name", label: "Customer Name", required: true },
+    { name: "customer_phone", label: "Customer Phone", required: true },
+    { name: "customer_email", label: "Customer Email", type: "email" },
+
+    {
+      name: "product_id",
+      label: "Product",
+      type: "select",
+      required: true,
+      options: products.map((product) => ({
+        label: product.name,
+        value: product.id,
+      })),
+    },
+
+    {
+      name: "affiliate_id",
+      label: "Affiliate",
+      type: "select",
+      options: [
+        { label: "None", value: "" },
+        ...affiliates.map((affiliate) => ({
+          label: `${affiliate.full_name} (${affiliate.affiliate_code})`,
+          value: affiliate.id,
+        })),
+      ],
+    },
+
+    { name: "quantity", label: "Quantity", type: "number", required: true },
+    { name: "size", label: "Size" },
+    { name: "total_amount", label: "Total Amount", type: "number", required: true },
+
+    {
+      name: "payment_status",
+      label: "Payment Status",
+      type: "select",
+      options: ["pending", "paid", "failed", "refunded"],
+      default: "pending",
+    },
+
+    {
+      name: "delivery_status",
+      label: "Delivery Status",
+      type: "select",
+      options: ["new", "processing", "shipped", "delivered", "cancelled"],
+      default: "new",
+    },
+
+    { name: "address", label: "Address" },
+    { name: "city", label: "City" },
+    { name: "notes", label: "Notes", type: "textarea" },
+  ];
+
   return (
     <CrudPage
       title="Orders"
@@ -41,7 +97,7 @@ export default function Orders() {
       resourceApi={api.orders}
       columns={columns}
       fields={fields}
-      searchKeys={["order_number", "customer_name"]}
+      searchKeys={["customer_name", "customer_phone", "city"]}
       searchPlaceholder="Search orders…"
       DataTable={DataTable}
       ModalForm={ModalForm}

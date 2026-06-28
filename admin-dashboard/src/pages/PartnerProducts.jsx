@@ -1,33 +1,53 @@
 // src/pages/PartnerProducts.jsx
+import { useEffect, useState } from "react";
 import CrudPage from "./CrudPage";
 import DataTable from "../components/DataTable";
 import ModalForm from "../components/ModalForm";
 import { api } from "../api/api";
 
 const columns = [
+  { key: "product_code", label: "Code" },
   { key: "name", label: "Product" },
-  { key: "partner_brand", label: "Partner brand" },
-  { key: "price", label: "Price", render: (r) => `£${r.price ?? "0.00"}` },
-  { key: "stock", label: "Stock" },
-  { key: "status", label: "Status", type: "status" },
-];
-
-const fields = [
-  { name: "name", label: "Product name", required: true },
-  { name: "partner_brand", label: "Partner brand", required: true },
-  { name: "price", label: "Price", type: "number", required: true },
-  { name: "stock", label: "Stock quantity", type: "number" },
-  {
-    name: "status",
-    label: "Status",
-    type: "select",
-    options: ["active", "inactive"],
-    default: "active",
-  },
-  { name: "image_url", label: "Image URL" },
+  { key: "actual_price", label: "Actual Price", render: (r) => `PKR ${r.actual_price ?? 0}` },
+  { key: "discount_price", label: "Discount Price", render: (r) => `PKR ${r.discount_price ?? 0}` },
+  { key: "size", label: "Size" },
+  { key: "is_featured", label: "Featured", render: (r) => (r.is_featured ? "Yes" : "No") },
+  { key: "is_active", label: "Status", render: (r) => (r.is_active ? "Active" : "Inactive") },
 ];
 
 export default function PartnerProducts() {
+  const [partnerBrands, setPartnerBrands] = useState([]);
+
+  useEffect(() => {
+    api.partnerBrands
+      .list()
+      .then((data) => {
+        console.log("Partner brands:", data);
+        setPartnerBrands(data || []);
+      })
+      .catch(console.error);
+  }, []);
+  const fields = [
+    {
+      name: "partner_brand_id",
+      label: "Partner Brand",
+      type: "select",
+      required: true,
+      options: partnerBrands.map((brand) => ({
+        label: `${brand.brand_name} (${brand.partner_code})`,
+        value: brand.id,
+      })),
+    },
+    { name: "name", label: "Product Name", required: true },
+    { name: "description", label: "Description", type: "textarea" },
+    { name: "actual_price", label: "Actual Price", type: "number" },
+    { name: "discount_price", label: "Discount Price", type: "number" },
+    { name: "size", label: "Size" },
+    { name: "main_image_url", label: "Image URL" },
+    { name: "is_featured", label: "Featured", type: "checkbox", default: false },
+    { name: "is_active", label: "Active", type: "checkbox", default: true },
+  ];
+
   return (
     <CrudPage
       title="Partner Products"
@@ -35,7 +55,7 @@ export default function PartnerProducts() {
       resourceApi={api.partnerProducts}
       columns={columns}
       fields={fields}
-      searchKeys={["name", "partner_brand"]}
+      searchKeys={["name", "product_code", "size"]}
       searchPlaceholder="Search partner products…"
       DataTable={DataTable}
       ModalForm={ModalForm}

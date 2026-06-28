@@ -46,8 +46,8 @@ src/
 ├── App.jsx
 ├── main.jsx
 └── styles.css
-```
 
+```
 ## Demo mode (no backend yet)
 
 If your API at `ahmadyarai-mz-essence.hf.space` isn't live yet, click
@@ -92,7 +92,7 @@ button from `Login.jsx` when you're ready, or leave it in as a permanent
 
 ## Build
 
-```bash
+``` bash
 npm run build
 npm run preview
 ```

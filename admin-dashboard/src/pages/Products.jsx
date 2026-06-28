@@ -1,4 +1,5 @@
 // src/pages/Products.jsx
+import { useEffect, useState } from "react";
 import CrudPage from "./CrudPage";
 import DataTable from "../components/DataTable";
 import ModalForm from "../components/ModalForm";
@@ -16,26 +17,52 @@ const columns = [
   { key: "is_active", label: "Status", render: (r) => (r.is_active ? "Active" : "Inactive") },
 ];
 
-const fields = [
-  { name: "name", label: "Product name", required: true },
-  { name: "slug", label: "Slug", required: true },
-
-  { name: "actual_price", label: "Actual Price", type: "number", required: true },
-  { name: "discount_price", label: "Discount Price", type: "number" },
-  { name: "stock_quantity", label: "Stock Quantity", type: "number" },
-
-  { name: "size", label: "Size" },
-  { name: "gender", label: "Gender" },
-  { name: "product_type", label: "Product Type" },
-
-  { name: "main_image_url", label: "Image URL" },
-  { name: "description", label: "Description", type: "textarea" },
-
-  { name: "is_active", label: "Active", type: "checkbox" },
-  { name: "is_featured", label: "Featured", type: "checkbox" },
-];
-
 export default function Products() {
+  const [categories, setCategories] = useState([]);
+  const [brands, setBrands] = useState([]);
+  const [branches, setBranches] = useState([]);
+
+  useEffect(() => {
+    api.categories.list().then((data) => setCategories(data || [])).catch(console.error);
+    api.brands.list().then((data) => setBrands(data || [])).catch(console.error);
+    api.branches.list().then((data) => setBranches(data || [])).catch(console.error);
+  }, []);
+
+  const fields = [
+    {
+      name: "category_id",
+      label: "Category",
+      type: "select",
+      options: categories.map((c) => ({ label: c.name, value: c.id })),
+      required: true,
+    },
+    {
+      name: "brand_id",
+      label: "Brand",
+      type: "select",
+      options: brands.map((b) => ({ label: b.name, value: b.id })),
+      required: true,
+    },
+    {
+      name: "branch_id",
+      label: "Branch",
+      type: "select",
+      options: branches.map((b) => ({ label: b.name, value: b.id })),
+    },
+    { name: "name", label: "Product Name", required: true },
+    { name: "slug", label: "Slug", required: true },
+    { name: "description", label: "Description", type: "textarea" },
+    { name: "actual_price", label: "Actual Price", type: "number", required: true },
+    { name: "discount_price", label: "Discount Price", type: "number" },
+    { name: "stock_quantity", label: "Stock", type: "number" },
+    { name: "size", label: "Size" },
+    { name: "gender", label: "Gender" },
+    { name: "product_type", label: "Product Type" },
+    { name: "main_image_url", label: "Image URL" },
+    { name: "is_featured", label: "Featured", type: "checkbox" },
+    { name: "is_active", label: "Active", type: "checkbox", default: true },
+  ];
+
   return (
     <CrudPage
       title="Products"

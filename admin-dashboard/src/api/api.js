@@ -300,7 +300,72 @@ export const api = {
         method: "DELETE",
       }),
   },
-  orders: crudResource("/api/orders/", "orders"),
-  partnerBrands: crudResource("/api/partner-brands/", "partnerBrands"),
-  partnerProducts: crudResource("/api/partner-products/", "partnerProducts"),
+  orders: {
+    list: () => request("/api/orders/"),
+
+    get: (id) => request(`/api/orders/${id}`),
+
+    create: (payload) =>
+      request("/api/orders/", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      }),
+
+    update: (id, payload) =>
+      request(`/api/orders/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(payload),
+      }),
+
+    remove: (id) =>
+      request(`/api/orders/${id}`, {
+        method: "DELETE",
+      }),
+  },
+
+  partnerBrands: {
+    list: () => request("/api/partner-brands/"),
+
+    get: (id) => request(`/api/partner-brands/${id}`),
+
+    create: (payload) =>
+      request("/api/partner-brands/", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      }),
+
+    update: (id, payload) =>
+      request(`/api/partner-brands/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(payload),
+      }),
+
+    remove: (id) =>
+      request(`/api/partner-brands/${id}`, {
+        method: "DELETE",
+      }),
+  },
+
+  partnerProducts: {
+    list: () => request("/api/partner-products/"),
+
+    get: (id) => request(`/api/partner-products/${id}`),
+
+    create: (payload) =>
+      request("/api/partner-products/", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      }),
+
+    update: (id, payload) =>
+      request(`/api/partner-products/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(payload),
+      }),
+
+    remove: (id) =>
+      request(`/api/partner-products/${id}`, {
+        method: "DELETE",
+      }),
+  },
 };
