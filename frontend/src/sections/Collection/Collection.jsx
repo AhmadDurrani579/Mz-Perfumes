@@ -12,9 +12,16 @@ function getDiscountPercent(actualPrice, discountPrice) {
   return Math.round(((actualPrice - discountPrice) / actualPrice) * 100)
 }
 
+function getProductPrice(originalPrice, discountPrice) {
+  if (discountPrice > 0 && discountPrice < originalPrice) return discountPrice
+
+  return originalPrice
+}
+
 function mapBackendProduct(product) {
   const originalPrice = Number(product.actual_price ?? product.price ?? 0)
-  const price = Number(product.discount_price ?? product.actual_price ?? product.price ?? 0)
+  const discountPrice = Number(product.discount_price ?? 0)
+  const price = getProductPrice(originalPrice, discountPrice)
 
   return {
     id: product.id,
@@ -24,7 +31,7 @@ function mapBackendProduct(product) {
     description: product.description ?? '',
     originalPrice,
     price,
-    discount: getDiscountPercent(originalPrice, price),
+    discount: getDiscountPercent(originalPrice, discountPrice),
     image: product.main_image_url || fallbackProductImage,
   }
 }

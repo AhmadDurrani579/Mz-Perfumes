@@ -3,6 +3,7 @@ import { createWhatsAppUrl } from '../../utils/productCollection.js'
 
 export default function ProductCard({ product }) {
   const { addItem } = useCart()
+  const hasDiscount = product.discount > 0
 
   return (
     <article className="product-card">
@@ -12,7 +13,7 @@ export default function ProductCard({ product }) {
           src={product.image}
           alt={`${product.name} perfume`}
         />
-        <span className="product-card__discount">-{product.discount}%</span>
+        {hasDiscount && <span className="product-card__discount">-{product.discount}%</span>}
       </div>
 
       <div className="product-card__content">
@@ -20,7 +21,7 @@ export default function ProductCard({ product }) {
         <h3>{product.name}</h3>
         <p className="product-card__description">{product.description}</p>
         <p className="product-card__pricing">
-          <del>£{product.originalPrice}</del>
+          {hasDiscount && <del>£{product.originalPrice}</del>}
           <strong>£{product.price}</strong>
         </p>
         <button

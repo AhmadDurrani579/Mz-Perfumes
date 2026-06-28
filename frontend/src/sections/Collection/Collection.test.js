@@ -21,3 +21,9 @@ test('filters products by selected brand', () => {
   assert.match(source, /visibleProducts/)
   assert.match(source, /product\.brandId === activeBrandId/)
 })
+
+test('uses actual price when backend discount price is zero', () => {
+  assert.match(source, /getProductPrice/)
+  assert.match(source, /discountPrice > 0/)
+  assert.match(source, /discountPrice < originalPrice/)
+})
