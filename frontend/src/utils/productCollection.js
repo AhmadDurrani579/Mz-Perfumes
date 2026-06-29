@@ -1,4 +1,4 @@
-const WHATSAPP_NUMBER = '923255607059'
+const WHATSAPP_NUMBER = '923715669424'
 
 export function filterProducts(products, activeHouse) {
   if (activeHouse === 'All Houses') return products
