@@ -2,6 +2,26 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 
 
+def clean_promotion_data(promotion_data: dict):
+    if promotion_data.get("brand_id") == "":
+        promotion_data["brand_id"] = None
+
+    if promotion_data.get("product_id") == "":
+        promotion_data["product_id"] = None
+
+    if promotion_data.get("promotion_scope") == "all_products":
+        promotion_data["brand_id"] = None
+        promotion_data["product_id"] = None
+
+    if promotion_data.get("promotion_scope") == "brand":
+        promotion_data["product_id"] = None
+
+    if promotion_data.get("promotion_scope") == "product":
+        promotion_data["brand_id"] = None
+
+    return promotion_data
+
+
 def get_all_promotions(db: Session):
     result = db.execute(
         text("SELECT * FROM promotions ORDER BY created_at DESC")
@@ -18,6 +38,8 @@ def get_promotion_by_id(db: Session, promotion_id: str):
 
 
 def create_promotion(db: Session, promotion_data: dict):
+    promotion_data = clean_promotion_data(promotion_data)
+
     query = text("""
         INSERT INTO promotions (
             title,
@@ -56,6 +78,7 @@ def create_promotion(db: Session, promotion_data: dict):
 
 
 def update_promotion(db: Session, promotion_id: str, promotion_data: dict):
+    promotion_data = clean_promotion_data(promotion_data)
     promotion_data["promotion_id"] = promotion_id
 
     query = text("""
@@ -90,7 +113,6 @@ def delete_promotion(db: Session, promotion_id: str):
 
     db.commit()
     return result.first()
-
 
 
 def get_active_promotions(db: Session):
