@@ -26,7 +26,10 @@ def get_store_products(db: Session):
     promotions_result = db.execute(text("""
         SELECT *
         FROM promotions
-        WHERE is_active = TRUE
+        WHERE
+            is_active = TRUE
+            AND start_date <= (CURRENT_TIMESTAMP AT TIME ZONE 'UTC')
+            AND end_date >= (CURRENT_TIMESTAMP AT TIME ZONE 'UTC')
         ORDER BY created_at DESC
     """))
     promotions = list(promotions_result.mappings().all())
