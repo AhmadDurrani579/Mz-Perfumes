@@ -20,7 +20,15 @@ const columns = [
 const fields = [
   { name: "title", label: "Banner Title", required: true },
   { name: "subtitle", label: "Subtitle" },
-  { name: "image_url", label: "Image URL", required: true },
+
+  {
+    name: "image_url",
+    label: "Banner Image",
+    type: "file",
+    upload: api.uploads.image,
+    required: true,
+  }, // <-- add comma here
+
   { name: "redirect_url", label: "Redirect URL" },
 
   {

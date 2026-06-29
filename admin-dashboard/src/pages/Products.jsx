@@ -8,13 +8,30 @@ import { api } from "../api/api";
 const columns = [
   { key: "name", label: "Product" },
   { key: "slug", label: "Slug" },
-  { key: "actual_price", label: "Actual Price", render: (r) => `PKR ${r.actual_price ?? 0}` },
-  { key: "discount_price", label: "Discount Price", render: (r) => `PKR ${r.discount_price ?? 0}` },
+  {
+    key: "actual_price",
+    label: "Actual Price",
+    render: (r) => `PKR ${r.actual_price ?? 0}`,
+  },
+  {
+    key: "discount_percentage",
+    label: "Discount",
+    render: (r) => `${r.discount_percentage ?? 0}%`,
+  },
+  {
+    key: "discounted_price",
+    label: "Final Price",
+    render: (r) => `PKR ${r.discounted_price ?? r.actual_price ?? 0}`,
+  },
   { key: "stock_quantity", label: "Stock" },
   { key: "size", label: "Size" },
   { key: "gender", label: "Gender" },
   { key: "product_type", label: "Type" },
-  { key: "is_active", label: "Status", render: (r) => (r.is_active ? "Active" : "Inactive") },
+  {
+    key: "is_active",
+    label: "Status",
+    render: (r) => (r.is_active ? "Active" : "Inactive"),
+  },
 ];
 
 export default function Products() {
@@ -53,7 +70,7 @@ export default function Products() {
     { name: "slug", label: "Slug", required: true },
     { name: "description", label: "Description", type: "textarea" },
     { name: "actual_price", label: "Actual Price", type: "number", required: true },
-    { name: "discount_price", label: "Discount Price", type: "number" },
+    { name: "discount_percentage", label: "Discount %", type: "number", default: 0 },
     { name: "stock_quantity", label: "Stock", type: "number" },
     { name: "size", label: "Size" },
     { name: "gender", label: "Gender" },

@@ -14,6 +14,7 @@ export default function ModalForm({
   submitError,
 }) {
   const [values, setValues] = useState({});
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     if (open) {
@@ -39,6 +40,7 @@ export default function ModalForm({
 
   function handleSubmit(e) {
     e.preventDefault();
+    console.log("Final submit values:", values);
     onSubmit(values);
   }
 
@@ -104,20 +106,27 @@ export default function ModalForm({
                     type="file"
                     accept="image/*"
                     required={field.required && !values[field.name]}
+                    disabled={uploading}
                     onChange={async (e) => {
                       const file = e.target.files?.[0];
                       if (!file) return;
 
-                      const uploadedUrl = await field.upload(file);
-                      console.log("Uploaded URL:", uploadedUrl);
-                      handleChange(field.name, uploadedUrl);
+                      try {
+                        setUploading(true);
+                        const uploadedUrl = await field.upload(file);
+                        handleChange(field.name, uploadedUrl);
+                      } catch (err) {
+                        alert("Image upload failed");
+                      } finally {
+                        setUploading(false);
+                      }
                     }}
                   />
 
-                  {values[field.name] && (
-                    <small>
-                      Uploaded: {values[field.name]}
-                    </small>
+                  {uploading && <small>Uploading image...</small>}
+
+                  {!uploading && values[field.name] && (
+                    <small>Uploaded: {values[field.name]}</small>
                   )}
                 </>
               ) : (
@@ -145,8 +154,12 @@ export default function ModalForm({
             >
               Cancel
             </button>
-            <button type="submit" className="btn btn--primary" disabled={submitting}>
-              {submitting ? "Saving…" : "Save"}
+              <button
+                type="submit"
+                className="btn btn--primary"
+                disabled={submitting || uploading}
+              >
+              {uploading ? "Uploading…" : submitting ? "Saving…" : "Save"}
             </button>
           </div>
         </form>
