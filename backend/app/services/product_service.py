@@ -28,8 +28,8 @@ def get_store_products(db: Session):
         FROM promotions
         WHERE
             is_active = TRUE
-            AND start_date <= (CURRENT_TIMESTAMP AT TIME ZONE 'UTC')
-            AND end_date >= (CURRENT_TIMESTAMP AT TIME ZONE 'UTC')
+            AND start_date::date <= CURRENT_DATE
+            AND end_date::date >= CURRENT_DATE
         ORDER BY created_at DESC
     """))
     promotions = list(promotions_result.mappings().all())
