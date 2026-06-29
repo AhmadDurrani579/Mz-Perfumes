@@ -7,18 +7,10 @@ import './Collection.css'
 const allBrand = { id: 'all', name: 'All Brands' }
 
 
-function getProductPrice(originalPrice, discountPrice) {
-  if (discountPrice > 0 && discountPrice < originalPrice) return discountPrice
-
-  return originalPrice
-}
 
 function mapBackendProduct(product) {
-  const originalPrice = Number(product.actual_price ?? product.price ?? 0)
-
-  const discountedPrice = Number(
-    product.discounted_price ?? originalPrice
-  )
+  const originalPrice = Number(product.actual_price ?? 0)
+  const finalPrice = Number(product.final_price ?? product.discounted_price ?? originalPrice)
 
   return {
     id: product.id,
@@ -27,8 +19,10 @@ function mapBackendProduct(product) {
     name: product.name,
     description: product.description ?? '',
     originalPrice,
-    price: discountedPrice,
+    price: finalPrice,
     discount: Number(product.discount_percentage ?? 0),
+    discountLabel: product.discount_label,
+    promotionApplied: product.promotion_applied,
     image: product.main_image_url || fallbackProductImage,
   }
 }

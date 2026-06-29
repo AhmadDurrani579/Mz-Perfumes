@@ -16,7 +16,7 @@ export default function ProductCard({ product }) {
 
         {hasDiscount && (
           <span className="product-card__discount">
-            {product.discount}% OFF
+            {product.discountLabel || `${product.discount}% OFF`}
           </span>
         )}
       </div>
