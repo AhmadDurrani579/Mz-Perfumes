@@ -22,9 +22,10 @@ def clean_promotion_data(promotion_data: dict):
 
     elif scope == "product":
         promotion_data["apply_to_all"] = False
+        promotion_data["brand_id"] = None
 
     return promotion_data
-
+    
 def get_all_promotions(db: Session):
     result = db.execute(
         text("SELECT * FROM promotions ORDER BY created_at DESC")
