@@ -22,17 +22,16 @@ def get_store_products(db: Session):
     """))
 
     products = list(products_result.mappings().all())
-
+            
     promotions_result = db.execute(text("""
         SELECT *
         FROM promotions
         WHERE
             is_active = TRUE
-            AND start_date <= CURRENT_TIMESTAMP
-            AND end_date >= CURRENT_TIMESTAMP
+            AND start_date <= NOW() AT TIME ZONE 'UTC'
+            AND end_date >= NOW() AT TIME ZONE 'UTC'
         ORDER BY created_at DESC
     """))
-
     promotions = list(promotions_result.mappings().all())
 
     store_products = []
