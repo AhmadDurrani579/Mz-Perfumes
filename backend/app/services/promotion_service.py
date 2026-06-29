@@ -5,6 +5,12 @@ from sqlalchemy import text
 def clean_promotion_data(promotion_data: dict):
     scope = str(promotion_data.get("promotion_scope") or "").strip().lower()
 
+    if scope not in ["all_products", "brand", "product"]:
+        scope = "all_products"
+
+    promotion_data["promotion_scope"] = scope
+    print("PROMOTION UPDATE DATA:", promotion_data)
+    
     if promotion_data.get("brand_id") == "":
         promotion_data["brand_id"] = None
 
@@ -25,7 +31,7 @@ def clean_promotion_data(promotion_data: dict):
         promotion_data["brand_id"] = None
 
     return promotion_data
-    
+        
 def get_all_promotions(db: Session):
     result = db.execute(
         text("SELECT * FROM promotions ORDER BY created_at DESC")
