@@ -41,33 +41,33 @@ def get_store_products(db: Session):
         product_dict = dict(product)
 
         actual_price = float(product_dict.get("actual_price") or 0)
-        final_price = float(
-            product_dict.get("discounted_price") or actual_price
-        )
+        final_price = actual_price
 
         discount_label = None
+        discount_value = 0
         promotion_applied = False
-
         matched_promotion = None
 
         for promo in promotions:
-            if promo["promotion_scope"] == "product" and promo["product_id"] == product_dict["id"]:
+            scope = str(promo.get("promotion_scope") or "").strip().lower()
+
+            if scope == "product" and str(promo.get("product_id")) == str(product_dict.get("id")):
                 matched_promotion = promo
                 break
 
-            if promo["promotion_scope"] == "brand" and promo["brand_id"] == product_dict["brand_id"]:
+            if scope == "brand" and str(promo.get("brand_id")) == str(product_dict.get("brand_id")):
                 matched_promotion = promo
                 break
 
-            if promo["promotion_scope"] == "all_products":
+            if scope == "all_products":
                 matched_promotion = promo
                 break
 
         if matched_promotion:
             promotion_applied = True
 
-            discount_type = matched_promotion["discount_type"]
-            discount_value = float(matched_promotion["discount_value"] or 0)
+            discount_type = str(matched_promotion.get("discount_type") or "").strip().lower()
+            discount_value = float(matched_promotion.get("discount_value") or 0)
 
             if discount_type == "percentage":
                 final_price = actual_price - (actual_price * discount_value / 100)
@@ -79,12 +79,12 @@ def get_store_products(db: Session):
 
         product_dict["final_price"] = round(final_price, 2)
         product_dict["promotion_applied"] = promotion_applied
+        product_dict["discount_value"] = discount_value
         product_dict["discount_label"] = discount_label
 
         store_products.append(product_dict)
 
-    return store_products
-        
+    return store_products        
 
 def get_product_by_id(db: Session, product_id: str):
     result = db.execute(
