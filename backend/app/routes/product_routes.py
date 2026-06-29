@@ -43,6 +43,10 @@ def delete_product(product_id: str, db: Session = Depends(get_db)):
 
 from app.schemas.product_schema import ProductCreate, ProductUpdate
 
+@router.get("/store/products")
+def get_store_products(db: Session = Depends(get_db)):
+    return product_service.get_store_products(db)
+
 @router.put("/{product_id}")
 def update_product(
     product_id: str,
