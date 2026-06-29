@@ -3,24 +3,27 @@ from sqlalchemy import text
 
 
 def clean_promotion_data(promotion_data: dict):
+    scope = str(promotion_data.get("promotion_scope") or "").strip().lower()
+
     if promotion_data.get("brand_id") == "":
         promotion_data["brand_id"] = None
 
     if promotion_data.get("product_id") == "":
         promotion_data["product_id"] = None
 
-    if promotion_data.get("promotion_scope") == "all_products":
+    if scope == "all_products":
+        promotion_data["apply_to_all"] = True
         promotion_data["brand_id"] = None
         promotion_data["product_id"] = None
 
-    if promotion_data.get("promotion_scope") == "brand":
+    elif scope == "brand":
+        promotion_data["apply_to_all"] = False
         promotion_data["product_id"] = None
 
-    if promotion_data.get("promotion_scope") == "product":
-        promotion_data["brand_id"] = None
+    elif scope == "product":
+        promotion_data["apply_to_all"] = False
 
     return promotion_data
-
 
 def get_all_promotions(db: Session):
     result = db.execute(
