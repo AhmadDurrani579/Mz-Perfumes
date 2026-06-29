@@ -42,6 +42,17 @@ def create_product(db: Session, product_data: dict):
 def update_product(db: Session, product_id: str, product_data: dict):
     product_data["product_id"] = product_id
 
+    actual_price = float(product_data["actual_price"])
+    discount_percentage = float(
+        product_data.get("discount_percentage", 0)
+    )
+
+    discounted_price = actual_price - (
+        actual_price * discount_percentage / 100
+    )
+
+    product_data["discounted_price"] = discounted_price
+
     query = text("""
         UPDATE products
         SET
@@ -52,7 +63,8 @@ def update_product(db: Session, product_id: str, product_data: dict):
             slug = :slug,
             description = :description,
             actual_price = :actual_price,
-            discount_price = :discount_price,
+            discount_percentage = :discount_percentage,
+            discounted_price = :discounted_price,
             stock_quantity = :stock_quantity,
             size = :size,
             gender = :gender,
@@ -68,7 +80,7 @@ def update_product(db: Session, product_id: str, product_data: dict):
     result = db.execute(query, product_data)
     db.commit()
     return result.mappings().first()
-
+    
 
 def delete_product(db: Session, product_id: str):
     result = db.execute(

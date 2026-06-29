@@ -13,7 +13,9 @@ class ProductCreate(BaseModel):
     description: Optional[str] = None
 
     actual_price: Decimal
-    discount_price: Optional[Decimal] = None
+    discount_percentage: Decimal = 0
+    discounted_price: Optional[Decimal] = None
+
     stock_quantity: int = 0
 
     size: Optional[str] = None
