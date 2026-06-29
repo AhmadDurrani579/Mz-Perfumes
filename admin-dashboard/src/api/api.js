@@ -368,4 +368,24 @@ export const api = {
         method: "DELETE",
       }),
   },
+uploads: {
+  image: async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("folder_name", "products");
+    formData.append("image_name", file.name);
+
+    const res = await fetch(`${BASE_URL}/api/uploads/image`, {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!res.ok) {
+      throw new Error("Image upload failed");
+    }
+
+    const data = await res.json();
+    return data.url;
+  },
+},
 };

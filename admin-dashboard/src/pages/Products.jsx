@@ -58,7 +58,12 @@ export default function Products() {
     { name: "size", label: "Size" },
     { name: "gender", label: "Gender" },
     { name: "product_type", label: "Product Type" },
-    { name: "main_image_url", label: "Image URL" },
+    {
+      name: "main_image_url",
+      label: "Product Image",
+      type: "file",
+      upload: api.uploads.image,
+    },
     { name: "is_featured", label: "Featured", type: "checkbox" },
     { name: "is_active", label: "Active", type: "checkbox", default: true },
   ];

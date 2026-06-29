@@ -43,7 +43,12 @@ export default function PartnerProducts() {
     { name: "actual_price", label: "Actual Price", type: "number" },
     { name: "discount_price", label: "Discount Price", type: "number" },
     { name: "size", label: "Size" },
-    { name: "main_image_url", label: "Image URL" },
+    {
+      name: "main_image_url",
+      label: "Product Image",
+      type: "file",
+      upload: api.uploads.image,
+    },
     { name: "is_featured", label: "Featured", type: "checkbox", default: false },
     { name: "is_active", label: "Active", type: "checkbox", default: true },
   ];

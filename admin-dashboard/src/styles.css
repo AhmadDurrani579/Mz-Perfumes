@@ -605,6 +605,9 @@ tbody tr:hover {
 .field input,
 .field select,
 .field textarea {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 10px 12px;
@@ -614,6 +617,17 @@ tbody tr:hover {
   font-family: inherit;
   outline: none;
   transition: border-color 0.15s ease;
+}
+.field input[type="file"] {
+  width: 100%;
+  max-width: 100%;
+  font-size: 14px;
+}
+
+.field small {
+  display: block;
+  margin-top: 6px;
+  word-break: break-all;
 }
 
 .field input:focus,
@@ -638,10 +652,10 @@ tbody tr:hover {
 .modal {
   background: var(--paper);
   border-radius: var(--radius-lg);
-  width: 100%;
-  max-width: 520px;
+  width: min(92vw, 1000px);
   max-height: 90vh;
   overflow-y: auto;
+  overflow-x: hidden;
   box-shadow: var(--shadow-modal);
 }
 
@@ -672,10 +686,9 @@ tbody tr:hover {
 
 .modal__fields {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 24px;
 }
-
 .modal__fields .field:has(textarea) {
   grid-column: 1 / -1;
 }

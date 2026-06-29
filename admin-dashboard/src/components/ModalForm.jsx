@@ -90,23 +90,46 @@ export default function ModalForm({
                 required={field.required}
                 onChange={(e) => handleChange(field.name, e.target.value)}
               />
-            ) : field.type === "checkbox" ? (
-              <input
-                id={field.name}
-                type="checkbox"
-                checked={Boolean(values[field.name])}
-                onChange={(e) => handleChange(field.name, e.target.checked)}
-              />
-            ) : (
-              <input
-                id={field.name}
-                type={field.type || "text"}
-                step={field.type === "number" ? "0.01" : undefined}
-                value={values[field.name] ?? ""}
-                required={field.required}
-                onChange={(e) => handleChange(field.name, e.target.value)}
-              />
-            )}
+              ) : field.type === "checkbox" ? (
+                <input
+                  id={field.name}
+                  type="checkbox"
+                  checked={Boolean(values[field.name])}
+                  onChange={(e) => handleChange(field.name, e.target.checked)}
+                />
+              ) : field.type === "file" ? (
+                <>
+                  <input
+                    id={field.name}
+                    type="file"
+                    accept="image/*"
+                    required={field.required && !values[field.name]}
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+
+                      const uploadedUrl = await field.upload(file);
+                      console.log("Uploaded URL:", uploadedUrl);
+                      handleChange(field.name, uploadedUrl);
+                    }}
+                  />
+
+                  {values[field.name] && (
+                    <small>
+                      Uploaded: {values[field.name]}
+                    </small>
+                  )}
+                </>
+              ) : (
+                <input
+                  id={field.name}
+                  type={field.type || "text"}
+                  step={field.type === "number" ? "0.01" : undefined}
+                  value={values[field.name] ?? ""}
+                  required={field.required}
+                  onChange={(e) => handleChange(field.name, e.target.value)}
+                />
+              )            }
               </div>
             ))}
           </div>
