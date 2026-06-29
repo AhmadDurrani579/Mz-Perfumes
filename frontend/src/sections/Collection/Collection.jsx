@@ -6,11 +6,6 @@ import './Collection.css'
 
 const allBrand = { id: 'all', name: 'All Brands' }
 
-function getDiscountPercent(actualPrice, discountPrice) {
-  if (!actualPrice || !discountPrice || discountPrice >= actualPrice) return 0
-
-  return Math.round(((actualPrice - discountPrice) / actualPrice) * 100)
-}
 
 function getProductPrice(originalPrice, discountPrice) {
   if (discountPrice > 0 && discountPrice < originalPrice) return discountPrice
@@ -20,8 +15,10 @@ function getProductPrice(originalPrice, discountPrice) {
 
 function mapBackendProduct(product) {
   const originalPrice = Number(product.actual_price ?? product.price ?? 0)
-  const discountPrice = Number(product.discount_price ?? 0)
-  const price = getProductPrice(originalPrice, discountPrice)
+
+  const discountedPrice = Number(
+    product.discounted_price ?? originalPrice
+  )
 
   return {
     id: product.id,
@@ -30,8 +27,8 @@ function mapBackendProduct(product) {
     name: product.name,
     description: product.description ?? '',
     originalPrice,
-    price,
-    discount: getDiscountPercent(originalPrice, discountPrice),
+    price: discountedPrice,
+    discount: Number(product.discount_percentage ?? 0),
     image: product.main_image_url || fallbackProductImage,
   }
 }

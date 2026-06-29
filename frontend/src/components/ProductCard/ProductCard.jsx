@@ -7,13 +7,18 @@ export default function ProductCard({ product }) {
 
   return (
     <article className="product-card">
-      <div className="product-card__media">
+     <div className="product-card__media">
         <img
           className="product-card__image"
           src={product.image}
           alt={`${product.name} perfume`}
         />
-        {hasDiscount && <span className="product-card__discount">-{product.discount}%</span>}
+
+        {hasDiscount && (
+          <span className="product-card__discount">
+            {product.discount}% OFF
+          </span>
+        )}
       </div>
 
       <div className="product-card__content">
