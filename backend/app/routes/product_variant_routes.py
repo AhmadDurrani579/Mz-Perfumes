@@ -12,7 +12,6 @@ router = APIRouter(
     tags=["Product Variants"]
 )
 
-
 @router.get("/")
 def get_all_product_variants(db: Session = Depends(get_db)):
     return product_variant_service.get_all_product_variants(db)
