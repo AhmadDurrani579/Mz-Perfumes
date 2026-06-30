@@ -154,6 +154,7 @@ export const api = {
 
   products: {
     list: () => request("/api/products/"),
+    
     get: (id) => request(`/api/products/${id}`),
     create: (payload) =>
       request("/api/products/", {

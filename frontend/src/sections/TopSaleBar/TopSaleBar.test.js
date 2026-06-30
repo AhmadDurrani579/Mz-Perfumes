@@ -5,7 +5,7 @@ import { test } from 'node:test'
 const appSource = readFileSync(new URL('../../App.jsx', import.meta.url), 'utf8')
 const source = readFileSync(new URL('./TopSaleBar.jsx', import.meta.url), 'utf8')
 
-test('renders the compact summer sale top bar above the header', () => {
+test('renders the compact summer sale offer for the sticky header', () => {
   assert.match(source, /SUMMER SALE!/)
   assert.match(source, /50% OFF/)
   assert.match(source, /Offer Ends In:/)
@@ -15,7 +15,7 @@ test('renders the compact summer sale top bar above the header', () => {
   assert.match(source, /SECS/)
   assert.match(source, /SHOP NOW/)
 
-  assert.match(appSource, /<TopSaleBar \/>[\s\S]*<Header \/>/)
+  assert.doesNotMatch(appSource, /<TopSaleBar \/>[\s\S]*<Header \/>/)
 })
 
 test('loads top bar title, subtitle, and end date from backend banners', () => {
