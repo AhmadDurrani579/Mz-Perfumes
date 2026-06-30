@@ -159,6 +159,23 @@ def get_store_products(db: Session):
     for product in products:
         product_dict = dict(product)
 
+        images_result = db.execute(text("""
+            SELECT
+                id,
+                image_url,
+                sort_order,
+                is_primary
+            FROM product_images
+            WHERE product_id = :product_id
+            ORDER BY is_primary DESC, sort_order ASC
+        """), {"product_id": product_dict["id"]})
+
+        images = list(images_result.mappings().all())
+
+        product_dict["images"] = [dict(img) for img in images]
+
+        if images:
+            product_dict["main_image_url"] = images[0]["image_url"]
         variants_result = db.execute(text("""
             SELECT
                 pv.variant_size_id,
