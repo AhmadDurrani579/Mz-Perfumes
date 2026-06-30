@@ -3,25 +3,37 @@ from sqlalchemy import text
 
 
 def clean_promotion_data(promotion_data: dict):
-    if promotion_data.get("brand_id") == "":
+    brand_id = promotion_data.get("brand_id")
+    product_id = promotion_data.get("product_id")
+
+    if brand_id == "":
+        brand_id = None
+
+    if product_id == "":
+        product_id = None
+
+    promotion_data["brand_id"] = brand_id
+    promotion_data["product_id"] = product_id
+
+    # Force correct scope based on selected IDs
+    if product_id:
+        promotion_data["promotion_scope"] = "product"
+        promotion_data["apply_to_all"] = False
         promotion_data["brand_id"] = None
 
-    if promotion_data.get("product_id") == "":
+    elif brand_id:
+        promotion_data["promotion_scope"] = "brand"
+        promotion_data["apply_to_all"] = False
         promotion_data["product_id"] = None
 
-    if promotion_data.get("promotion_scope") == "all_products":
+    else:
+        promotion_data["promotion_scope"] = "all_products"
+        promotion_data["apply_to_all"] = True
         promotion_data["brand_id"] = None
         promotion_data["product_id"] = None
-
-    if promotion_data.get("promotion_scope") == "brand":
-        promotion_data["product_id"] = None
-
-    if promotion_data.get("promotion_scope") == "product":
-        promotion_data["brand_id"] = None
 
     return promotion_data
-
-
+            
 def get_all_promotions(db: Session):
     result = db.execute(
         text("SELECT * FROM promotions ORDER BY created_at DESC")
