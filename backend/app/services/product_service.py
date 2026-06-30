@@ -142,6 +142,7 @@ def get_store_products(db: Session):
     """))
 
     products = list(products_result.mappings().all())
+
     promotions_result = db.execute(text("""
         SELECT *
         FROM promotions
@@ -158,7 +159,7 @@ def get_store_products(db: Session):
     for product in products:
         product_dict = dict(product)
 
-        variant_result = db.execute(text("""
+        variants_result = db.execute(text("""
             SELECT
                 pv.variant_size_id,
                 pv.stock_quantity,
@@ -173,12 +174,13 @@ def get_store_products(db: Session):
                 pv.product_id = :product_id
                 AND pv.is_active = TRUE
                 AND vs.is_active = TRUE
-            LIMIT 1
+            ORDER BY vs.size_ml ASC
         """), {"product_id": product_dict["id"]})
 
-        variant = variant_result.mappings().first()
+        variants = list(variants_result.mappings().all())
+        default_variant = variants[0] if variants else None
 
-        actual_price = float(variant["price"]) if variant else 0
+        actual_price = float(default_variant["price"]) if default_variant else 0
         final_price = actual_price
 
         discount_label = None
@@ -214,10 +216,28 @@ def get_store_products(db: Session):
                 final_price = max(actual_price - discount_value, 0)
                 discount_label = f"PKR {discount_value:g} OFF"
 
-        product_dict["variant_size_id"] = variant["variant_size_id"] if variant else None
-        product_dict["size"] = variant["label"] if variant else None
-        product_dict["size_ml"] = variant["size_ml"] if variant else None
-        product_dict["stock_quantity"] = variant["stock_quantity"] if variant else 0
+        product_dict["variants"] = [
+            {
+                "variant_size_id": v["variant_size_id"],
+                "size": v["label"],
+                "size_ml": v["size_ml"],
+                "stock_quantity": v["stock_quantity"],
+                "actual_price": round(float(v["price"]), 2),
+                "final_price": round(
+                    float(v["price"]) - (float(v["price"]) * discount_value / 100),
+                    2
+                ) if promotion_applied and matched_promotion and str(matched_promotion.get("discount_type")).lower() == "percentage"
+                else round(max(float(v["price"]) - discount_value, 0), 2)
+                if promotion_applied and matched_promotion and str(matched_promotion.get("discount_type")).lower() == "fixed"
+                else round(float(v["price"]), 2),
+            }
+            for v in variants
+        ]
+
+        product_dict["variant_size_id"] = default_variant["variant_size_id"] if default_variant else None
+        product_dict["size"] = default_variant["label"] if default_variant else None
+        product_dict["size_ml"] = default_variant["size_ml"] if default_variant else None
+        product_dict["stock_quantity"] = default_variant["stock_quantity"] if default_variant else 0
 
         product_dict["actual_price"] = round(actual_price, 2)
         product_dict["final_price"] = round(final_price, 2)
