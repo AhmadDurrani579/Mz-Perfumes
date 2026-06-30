@@ -12,15 +12,14 @@ class ProductCreate(BaseModel):
     slug: str
     description: Optional[str] = None
 
-    actual_price: Decimal
-    discount_percentage: Decimal = 0
-    discounted_price: Optional[Decimal] = None
 
     stock_quantity: int = 0
 
-    size: Optional[str] = None
     gender: Optional[str] = None
     product_type: Optional[str] = None
+
+    variant_size_id: Optional[str] = None
+    stock_quantity: int = 0
 
     main_image_url: Optional[str] = None
     is_featured: bool = False
