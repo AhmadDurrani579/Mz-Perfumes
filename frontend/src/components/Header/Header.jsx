@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useCart } from '../../hooks/useCart.js'
+import TopSaleBar from '../../sections/TopSaleBar/TopSaleBar.jsx'
 import { isHeaderScrolled } from '../../utils/headerScroll.js'
 
 export default function Header() {
@@ -20,11 +21,16 @@ export default function Header() {
         <span className="brand-mark" aria-hidden="true">MZ</span>
         <span className="brand-name">Perfumes</span>
       </a>
-      <nav className="primary-nav" aria-label="Primary navigation">
-        <a href="#collection">Collection</a>
-        <a href="#craft">House</a>
-        <a href="#contact">Contact</a>
-      </nav>
+      <div className="site-header__nav">
+        <nav className="primary-nav" aria-label="Primary navigation">
+          <a href="#collection">Collection</a>
+          <a href="#craft">House</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </div>
+      <div className="site-header__offer">
+        <TopSaleBar />
+      </div>
       <button className="cart-button" type="button" aria-label="Open shopping cart">
         <svg className="cart-icon" viewBox="0 0 32 32" aria-hidden="true">
           <path d="M3.5 5.5h3l2.2 13.2h14.7l2.7-9.2H8" />
