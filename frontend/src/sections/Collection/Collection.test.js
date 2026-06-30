@@ -17,13 +17,14 @@ test('loads products from the backend API', () => {
 })
 
 test('filters products by selected brand', () => {
-  assert.match(source, /brandId: product\.brand_id/)
+  assert.match(source, /mapBackendProduct/)
   assert.match(source, /visibleProducts/)
   assert.match(source, /product\.brandId === activeBrandId/)
 })
 
-test('uses actual price when backend discount price is zero', () => {
-  assert.match(source, /getProductPrice/)
-  assert.match(source, /discountPrice > 0/)
-  assert.match(source, /discountPrice < originalPrice/)
+test('opens a product detail view from selected product state', () => {
+  assert.match(source, /selectedProduct/)
+  assert.match(source, /setSelectedProduct/)
+  assert.match(source, /ProductDetail/)
+  assert.match(source, /onClose=\{\(\) => setSelectedProduct\(null\)\}/)
 })

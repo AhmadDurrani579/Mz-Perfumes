@@ -1,36 +1,18 @@
 import { useEffect, useState } from 'react'
+import ProductDetail from '../../components/ProductDetail/ProductDetail.jsx'
 import ProductCard from '../../components/ProductCard/ProductCard.jsx'
 import fallbackProductImage from '../../assets/images/perfume-hero.png'
 import { getBrands, getProducts } from '../../services/api.js'
+import { mapBackendProduct } from '../../utils/productMapping.js'
 import './Collection.css'
 
 const allBrand = { id: 'all', name: 'All Brands' }
-
-
-
-function mapBackendProduct(product) {
-  const originalPrice = Number(product.actual_price ?? 0)
-  const finalPrice = Number(product.final_price ?? product.discounted_price ?? originalPrice)
-
-  return {
-    id: product.id,
-    brandId: product.brand_id,
-    house: product.brand_name ?? product.brand ?? '',
-    name: product.name,
-    description: product.description ?? '',
-    originalPrice,
-    price: finalPrice,
-    discount: Number(product.discount_percentage ?? 0),
-    discountLabel: product.discount_label,
-    promotionApplied: product.promotion_applied,
-    image: product.main_image_url || fallbackProductImage,
-  }
-}
 
 export default function Collection() {
   const [brands, setBrands] = useState([])
   const [products, setProducts] = useState([])
   const [activeBrandId, setActiveBrandId] = useState(allBrand.id)
+  const [selectedProduct, setSelectedProduct] = useState(null)
   const brandFilters = [allBrand, ...brands]
   const visibleProducts =
     activeBrandId === allBrand.id
@@ -50,7 +32,7 @@ export default function Collection() {
 
     getProducts()
       .then((data) => {
-        if (isMounted) setProducts(data.map(mapBackendProduct))
+        if (isMounted) setProducts(data.map((product) => mapBackendProduct(product, fallbackProductImage)))
       })
       .catch(() => {
         if (isMounted) setProducts([])
@@ -85,9 +67,13 @@ export default function Collection() {
 
         <div className="product-grid">
           {visibleProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard key={product.id} product={product} onViewDetails={setSelectedProduct} />
           ))}
         </div>
+
+        {selectedProduct && (
+          <ProductDetail product={selectedProduct} onClose={() => setSelectedProduct(null)} />
+        )}
       </div>
     </section>
   )
