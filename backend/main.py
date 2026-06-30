@@ -16,6 +16,7 @@ from app.routes.partner_product_routes import router as partner_product_router
 from app.routes.dashboard_routes import router as dashboard_router
 from app.routes.upload_routes import router as upload_router
 from app.routes.store_routes import router as store_router
+from app.routes import product_variant_routes
 
 # Create FastAPI app
 app = FastAPI(
@@ -79,3 +80,5 @@ app.include_router(partner_product_router)
 app.include_router(dashboard_router)
 app.include_router(upload_router)
 app.include_router(store_router)
+
+app.include_router(product_variant_routes.router)
