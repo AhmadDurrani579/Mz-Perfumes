@@ -106,11 +106,14 @@ export default function Promotions() {
       name: "promotion_scope",
       label: "Promotion Scope",
       type: "select",
-      options: ["all_products", "brand", "product"],
+      options: [
+        { label: "All Products", value: "all_products" },
+        { label: "Specific Brand", value: "brand" },
+        { label: "Specific Product", value: "product" },
+      ],
       default: "all_products",
       required: true,
     },
-
     {
       name: "brand_id",
       label: "Brand",
@@ -142,14 +145,6 @@ export default function Promotions() {
     { name: "start_date", label: "Start Date", type: "datetime-local" },
 
     { name: "end_date", label: "End Date", type: "datetime-local" },
-
-    {
-      name: "apply_to_all",
-      label: "Apply To All",
-      type: "checkbox",
-      default: true,
-    },
-
     {
       name: "is_active",
       label: "Active",

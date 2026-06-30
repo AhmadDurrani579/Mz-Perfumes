@@ -3,8 +3,8 @@ import { createWhatsAppUrl } from '../../utils/productCollection.js'
 
 export default function ProductCard({ product }) {
   const { addItem } = useCart()
-  const hasDiscount = product.discount > 0
-
+  const hasDiscount = product.promotionApplied || product.discount > 0;
+  
   return (
     <article className="product-card">
      <div className="product-card__media">
