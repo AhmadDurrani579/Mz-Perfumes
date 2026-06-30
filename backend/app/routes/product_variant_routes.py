@@ -3,7 +3,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from app.database import get_db
+from app.database.db import get_db
 from app.schemas.product_variant_schema import ProductVariantCreate, ProductVariantUpdate
 from app.services import product_variant_service
 
