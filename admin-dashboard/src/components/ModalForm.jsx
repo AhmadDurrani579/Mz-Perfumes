@@ -1,5 +1,6 @@
 // src/components/ModalForm.jsx
 import { useEffect, useState } from "react";
+import SizePicker from "./SizePicker";
 
 const EMPTY = {};
 
@@ -23,6 +24,9 @@ export default function ModalForm({
         if (f.type === "checkbox") {
           defaults[f.name] =
             initialValues[f.name] ?? f.default ?? false;
+        } else if (f.type === "size_picker") {
+          defaults[f.name] =
+            initialValues[f.name] ?? f.default ?? [];
         } else {
           defaults[f.name] =
             initialValues[f.name] ?? f.default ?? "";
@@ -57,12 +61,29 @@ export default function ModalForm({
         <form className="modal__form" onSubmit={handleSubmit}>
           <div className="modal__fields">
             {fields.map((field) => (
-              <div className="field" key={field.name}>
+              <div
+                className={`field ${field.type === "size_picker" || field.type === "textarea" ? "field--wide" : ""}`}
+                key={field.name}
+              >
                 <label htmlFor={field.name}>
                   {field.label}
                   {field.required && <span className="field__required">*</span>}
                 </label>
-                {field.type === "select" ? (
+                {field.type === "size_picker" ? (
+                  <SizePicker
+                    sizeOptions={field.sizeOptions || []}
+                    value={values[field.name]}
+                    onChange={(rows) => handleChange(field.name, rows)}
+                    onPick={(size) => {
+                      if (field.priceSyncField) {
+                        handleChange(field.priceSyncField, size.price);
+                      }
+                      if (field.labelSyncField) {
+                        handleChange(field.labelSyncField, size.label);
+                      }
+                    }}
+                  />
+                ) : field.type === "select" ? (
                   <select
                     id={field.name}
                     value={values[field.name] ?? ""}

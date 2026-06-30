@@ -10,24 +10,6 @@ const allBrand = { id: 'all', name: 'All Brands' }
 
 
 
-function mapBackendProduct(product) {
-  const originalPrice = Number(product.actual_price ?? 0)
-  const finalPrice = Number(product.final_price ?? product.discounted_price ?? originalPrice)
-
-  return {
-    id: product.id,
-    brandId: product.brand_id,
-    house: product.brand_name ?? product.brand ?? '',
-    name: product.name,
-    description: product.description ?? '',
-    originalPrice,
-    price: finalPrice,
-    discount: Number(product.discount_percentage ?? 0),
-    discountLabel: product.discount_label,
-    promotionApplied: product.promotion_applied,
-    image: product.main_image_url || fallbackProductImage,
-  }
-}
 
 export default function Collection() {
   const [brands, setBrands] = useState([])

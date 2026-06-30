@@ -18,6 +18,14 @@ const SEED = {
     { id: 4, name: "Amber Mist", sku: "MZ-004", brand: "MZ Essence", category: "Woody", price: "98.00", stock: 27, status: "active", image_url: "", description: "Sandalwood and amber with a soft musk base." },
     { id: 5, name: "Jasmine Veil", sku: "MZ-005", brand: "Maison Belle", category: "Floral", price: "76.25", stock: 9, status: "active", image_url: "", description: "Jasmine sambac wrapped in white musk." },
   ],
+  productVariants: [
+    { id: 1, product: "Velvet Oud", size_label: "2ml Tester", size_ml: 2, price: "15.00", stock: 60, status: "active" },
+    { id: 2, product: "Velvet Oud", size_label: "10ml", size_ml: 10, price: "35.00", stock: 40, status: "active" },
+    { id: 3, product: "Velvet Oud", size_label: "30ml", size_ml: 30, price: "85.00", stock: 42, status: "active" },
+    { id: 4, product: "Velvet Oud", size_label: "50ml", size_ml: 50, price: "135.00", stock: 15, status: "active" },
+    { id: 5, product: "Rose Noir", size_label: "30ml", size_ml: 30, price: "72.50", stock: 18, status: "active" },
+    { id: 6, product: "Rose Noir", size_label: "50ml", size_ml: 50, price: "110.00", stock: 8, status: "inactive" },
+  ],
   categories: [
     { id: 1, name: "Oriental", slug: "oriental", status: "active", description: "Warm, spiced, resinous fragrances." },
     { id: 2, name: "Floral", slug: "floral", status: "active", description: "Rose, jasmine, and other florals." },
@@ -142,12 +150,12 @@ export async function mockDashboardSummary() {
   return {
     total_products: db.products.length,
     total_orders: db.orders.length,
-    pending_orders: db.orders.filter((o) => o.status === "pending").length,
-    total_affiliates: db.affiliates.length,
-    total_brands: db.brands.length,
-    total_partner_brands: db.partnerBrands.length,
-    total_partner_products: db.partnerProducts.length,
     total_revenue: revenue.toFixed(2),
+    total_categories: db.categories.length,
+    total_brands: db.brands.length,
+    total_branches: db.branches.length,
+    total_affiliates: db.affiliates.length,
+    active_promotions: db.promotions.filter((p) => p.status === "active").length,
   };
 }
 

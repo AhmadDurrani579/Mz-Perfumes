@@ -6,6 +6,7 @@ import Topbar from "./components/Topbar";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Products from "./pages/Products";
+import Sizes from "./pages/Sizes";
 import Categories from "./pages/Categories";
 import Brands from "./pages/Brands";
 import Branches from "./pages/Branches";
@@ -20,6 +21,7 @@ import { isAuthenticated } from "./api/api";
 const TITLES = {
   "/": "Dashboard",
   "/products": "Products",
+  "/sizes": "Variants",
   "/categories": "Categories",
   "/brands": "Brands",
   "/branches": "Branches",
@@ -30,6 +32,10 @@ const TITLES = {
   "/partner-brands": "Partner Brands",
   "/partner-products": "Partner Products",
 };
+
+function resolveTitle(pathname) {
+  return TITLES[pathname] || "MZ Essence";
+}
 
 function RequireAuth({ children }) {
   const location = useLocation();
@@ -42,7 +48,7 @@ function RequireAuth({ children }) {
 function AdminLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
-  const title = TITLES[location.pathname] || "MZ Essence";
+  const title = resolveTitle(location.pathname);
 
   return (
     <div className="app-shell">
@@ -74,6 +80,7 @@ export default function App() {
               <Routes>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/products" element={<Products />} />
+                <Route path="/sizes" element={<Sizes />} />
                 <Route path="/categories" element={<Categories />} />
                 <Route path="/brands" element={<Brands />} />
                 <Route path="/branches" element={<Branches />} />

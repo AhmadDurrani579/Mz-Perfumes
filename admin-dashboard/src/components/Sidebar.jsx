@@ -10,6 +10,7 @@ const NAV_GROUPS = [
     label: "Catalogue",
     items: [
       { to: "/products", label: "Products", icon: "✦" },
+      { to: "/sizes", label: "Variants", icon: "▥" },
       { to: "/categories", label: "Categories", icon: "▤" },
       { to: "/brands", label: "Brands", icon: "❀" },
     ],

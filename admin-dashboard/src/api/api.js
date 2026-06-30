@@ -14,6 +14,8 @@ import {
   mockActivePromotions,
 } from "./mockData.js";
 
+import { mockSizes} from "./sizesMock.js";
+
 export const BASE_URL = "https://ahmadyarai-mz-essence.hf.space";
 const TOKEN_KEY = "mz_essence_token";
 
@@ -168,6 +170,30 @@ export const api = {
       }),
     remove: (id) =>
       request(`/api/products/${id}`, {
+        method: "DELETE",
+      }),
+  },
+
+  productVariants: {
+    list: () => request("/api/product-variants/"),
+
+    listByProduct: (productId) =>
+      request(`/api/product-variants/product/${productId}`),
+
+    create: (payload) =>
+      request("/api/product-variants/", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      }),
+
+    update: (productId, variantSizeId, payload) =>
+      request(`/api/product-variants/${productId}/${variantSizeId}`, {
+        method: "PUT",
+        body: JSON.stringify(payload),
+      }),
+
+    remove: (productId, variantSizeId) =>
+      request(`/api/product-variants/${productId}/${variantSizeId}`, {
         method: "DELETE",
       }),
   },
@@ -388,5 +414,28 @@ uploads: {
     const data = await res.json();
     return data.url;
   },
+ },
+
+sizes: {
+  list: () => request("/api/sizes/"),
+
+  get: (id) => request(`/api/sizes/${id}`),
+
+  create: (payload) =>
+    request("/api/sizes/", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+
+  update: (id, payload) =>
+    request(`/api/sizes/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(payload),
+    }),
+
+  remove: (id) =>
+    request(`/api/sizes/${id}`, {
+      method: "DELETE",
+    }),
 },
 };
