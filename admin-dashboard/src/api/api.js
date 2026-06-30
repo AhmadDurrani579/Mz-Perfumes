@@ -438,4 +438,21 @@ sizes: {
       method: "DELETE",
     }),
 },
+
+productImages: {
+  listByProduct: (productId) =>
+    request(`/api/product-images/product/${productId}`),
+
+  create: (payload) =>
+    request("/api/product-images/", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+
+  remove: (id) =>
+    request(`/api/product-images/${id}`, {
+      method: "DELETE",
+    }),
+},
+
 };

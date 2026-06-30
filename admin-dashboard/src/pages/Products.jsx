@@ -21,12 +21,14 @@ const columns = [
 // is pre-checked (with its saved stock) when you click Edit.
 async function loadExtra(row) {
   const existingVariants = await api.productVariants.listByProduct(row.id);
+
   const variants = existingVariants.map((v) => ({
+    product_id: row.id,
     variant_size_id: v.variant_size_id,
     price: v.price,
     stock_quantity: v.stock_quantity,
-    _existingVariantId: v.id,
   }));
+
   return { variants };
 }
 
@@ -35,36 +37,52 @@ async function loadExtra(row) {
 // previously-checked ones, deletes unchecked ones.
 async function afterSave(savedProduct, values) {
   const submitted = values.variants || [];
-
   const existing = await api.productVariants.listByProduct(savedProduct.id);
-  const existingIds = new Set(existing.map((v) => String(v.id)));
-  const submittedIds = new Set(
-    submitted
-      .filter((v) => v._existingVariantId)
-      .map((v) => String(v._existingVariantId))
+
+  const submittedSizeIds = new Set(
+    submitted.map((v) => String(v.variant_size_id))
   );
 
-  // Remove sizes that were unchecked.
   await Promise.all(
     existing
-      .filter((v) => !submittedIds.has(String(v.id)))
-      .map((v) => api.productVariants.remove(v.id))
+      .filter((v) => !submittedSizeIds.has(String(v.variant_size_id)))
+      .map((v) => api.productVariants.remove(savedProduct.id, v.variant_size_id))
   );
 
-  // Create newly-checked sizes, update previously-checked ones.
   await Promise.all(
     submitted.map((v) => {
-       const payload = {
-          product_id: savedProduct.id,
-          variant_size_id: v.variant_size_id,
-          price: v.price,
-          stock_quantity: v.stock_quantity,
-        };     
-       return v._existingVariantId && existingIds.has(String(v._existingVariantId))
-        ? api.productVariants.update(v._existingVariantId, payload)
+      const payload = {
+        product_id: savedProduct.id,
+        variant_size_id: v.variant_size_id,
+        price: v.price,
+        stock_quantity: Number(v.stock_quantity || 0),
+        is_active: true,
+      };
+
+      const alreadyExists = existing.some(
+        (x) => String(x.variant_size_id) === String(v.variant_size_id)
+      );
+
+      return alreadyExists
+        ? api.productVariants.update(savedProduct.id, v.variant_size_id, payload)
         : api.productVariants.create(payload);
     })
   );
+
+  const images = values.images || [];
+
+  if (images.length > 0) {
+    await Promise.all(
+      images.map((url, index) =>
+        api.productImages.create({
+          product_id: savedProduct.id,
+          image_url: url,
+          sort_order: index + 1,
+          is_primary: index === 0,
+        })
+      )
+    );
+  }
 }
 
 export default function Products() {
@@ -101,6 +119,7 @@ export default function Products() {
       type: "select",
       options: branches.map((b) => ({ label: b.name, value: b.id })),
     },
+    
     { name: "name", label: "Product Name", required: true },
     { name: "slug", label: "Slug", required: true },
     { name: "description", label: "Description", type: "textarea" },
@@ -113,11 +132,13 @@ export default function Products() {
     { name: "gender", label: "Gender" },
     { name: "product_type", label: "Product Type" },
     {
-      name: "main_image_url",
-      label: "Product Image",
-      type: "file",
+      name: "images",
+      label: "Product Images",
+      type: "multi_file",
       upload: api.uploads.image,
+      maxFiles: 4,
     },
+
     { name: "is_featured", label: "Featured", type: "checkbox" },
     { name: "is_active", label: "Active", type: "checkbox", default: true },
   ];

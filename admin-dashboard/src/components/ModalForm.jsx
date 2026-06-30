@@ -1,7 +1,7 @@
 // src/components/ModalForm.jsx
 import { useEffect, useState } from "react";
 import SizePicker from "./SizePicker";
-
+import MultiFileUploadField from "./MultiFileUploadField";
 const EMPTY = {};
 
 export default function ModalForm({
@@ -24,8 +24,8 @@ export default function ModalForm({
         if (f.type === "checkbox") {
           defaults[f.name] =
             initialValues[f.name] ?? f.default ?? false;
-        } else if (f.type === "size_picker") {
-          defaults[f.name] =
+        } else if (f.type === "size_picker" || f.type === "multi_file") {
+            defaults[f.name] =
             initialValues[f.name] ?? f.default ?? [];
         } else {
           defaults[f.name] =
@@ -120,7 +120,15 @@ export default function ModalForm({
                   checked={Boolean(values[field.name])}
                   onChange={(e) => handleChange(field.name, e.target.checked)}
                 />
-              ) : field.type === "file" ? (
+              )
+                : field.type === "multi_file" ? (
+              <MultiFileUploadField
+                value={Array.isArray(values[field.name]) ? values[field.name] : []}
+                onChange={(urls) => handleChange(field.name, urls)}
+                upload={field.upload}
+                maxFiles={field.maxFiles || 4}
+              /> ) 
+                 : field.type === "file" ? (
                 <>
                   <input
                     id={field.name}
