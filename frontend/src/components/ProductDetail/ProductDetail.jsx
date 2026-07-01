@@ -13,18 +13,16 @@ function DetailItem({ label, value, status }) {
   )
 }
 
-export default function ProductDetail({ product, onClose }) {
+export default function ProductDetail({ product, onBack }) {
   const { addItem } = useCart()
   const stockLabel = product.stockQuantity > 0 ? `${product.stockQuantity} in stock` : 'Out of stock'
   const stockStatus = product.stockQuantity > 0 ? 'available' : 'unavailable'
 
   return (
-    <div className="product-detail" role="dialog" aria-modal="true" aria-labelledby="product-detail-title">
-      <button className="product-detail__backdrop" type="button" aria-label="Close product details" onClick={onClose} />
-
+    <section className="product-detail product-detail-page" aria-labelledby="product-detail-title">
       <article className="product-detail__panel">
-        <button className="product-detail__close" type="button" aria-label="Close product details" onClick={onClose}>
-          x
+        <button className="product-detail__back-button" type="button" onClick={onBack}>
+          Back to collection
         </button>
 
         <div className="product-detail__media">
@@ -70,6 +68,6 @@ export default function ProductDetail({ product, onClose }) {
           </div>
         </div>
       </article>
-    </div>
+    </section>
   )
 }

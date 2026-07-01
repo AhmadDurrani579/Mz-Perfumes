@@ -4,11 +4,11 @@ import { test } from 'node:test'
 
 const source = readFileSync(new URL('./Collection.css', import.meta.url), 'utf8')
 
-test('hides the product detail modal scrollbar while preserving overflow scrolling', () => {
-  assert.match(source, /\.product-detail__panel[\s\S]*overflow: auto/)
-  assert.match(source, /\.product-detail__panel[\s\S]*scrollbar-width: none/)
-  assert.match(source, /\.product-detail__panel::-webkit-scrollbar/)
-  assert.match(source, /display: none/)
+test('renders product details as a normal page layout', () => {
+  assert.match(source, /\.product-detail\s*{[\s\S]*min-height:\s*calc\(100svh - 104px\)/)
+  assert.match(source, /\.product-detail\s*{[\s\S]*background:\s*#fbfaf7/)
+  assert.match(source, /\.product-detail__panel\s*{[\s\S]*overflow:\s*visible/)
+  assert.match(source, /\.product-detail__back-button\s*{[\s\S]*position:\s*absolute/)
 })
 
 test('uses light collection surfaces with gold accents', () => {

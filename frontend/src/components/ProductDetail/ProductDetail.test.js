@@ -23,5 +23,14 @@ test('shows customer-facing product fields in the product detail view', () => {
 test('keeps purchase actions available in product details', () => {
   assert.match(source, /addItem\(product\)/)
   assert.match(source, /createWhatsAppUrl\(product\.name\)/)
-  assert.match(source, /onClose/)
+  assert.match(source, /onBack/)
+})
+
+test('renders as a product detail page instead of a modal dialog', () => {
+  assert.match(source, /product-detail-page/)
+  assert.match(source, /Back to collection/)
+  assert.doesNotMatch(source, /role="dialog"/)
+  assert.doesNotMatch(source, /aria-modal/)
+  assert.doesNotMatch(source, /product-detail__backdrop/)
+  assert.doesNotMatch(source, /product-detail__close/)
 })

@@ -22,9 +22,10 @@ test('filters products by selected brand', () => {
   assert.match(source, /product\.brandId === activeBrandId/)
 })
 
-test('opens a product detail view from selected product state', () => {
-  assert.match(source, /selectedProduct/)
-  assert.match(source, /setSelectedProduct/)
-  assert.match(source, /ProductDetail/)
-  assert.match(source, /onClose=\{\(\) => setSelectedProduct\(null\)\}/)
+test('sends selected products to the parent page controller', () => {
+  assert.match(source, /onViewProduct/)
+  assert.match(source, /onViewDetails={onViewProduct}/)
+  assert.doesNotMatch(source, /selectedProduct/)
+  assert.doesNotMatch(source, /setSelectedProduct/)
+  assert.doesNotMatch(source, /<ProductDetail/)
 })

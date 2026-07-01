@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import ProductDetail from '../../components/ProductDetail/ProductDetail.jsx'
 import ProductCard from '../../components/ProductCard/ProductCard.jsx'
 import fallbackProductImage from '../../assets/images/perfume-hero.png'
 import { getBrands, getProducts } from '../../services/api.js'
@@ -11,11 +10,10 @@ const allBrand = { id: 'all', name: 'All Brands' }
 
 
 
-export default function Collection() {
+export default function Collection({ onViewProduct }) {
   const [brands, setBrands] = useState([])
   const [products, setProducts] = useState([])
   const [activeBrandId, setActiveBrandId] = useState(allBrand.id)
-  const [selectedProduct, setSelectedProduct] = useState(null)
   const brandFilters = [allBrand, ...brands]
   const visibleProducts =
     activeBrandId === allBrand.id
@@ -70,13 +68,9 @@ export default function Collection() {
 
         <div className="product-grid">
           {visibleProducts.map((product) => (
-            <ProductCard key={product.id} product={product} onViewDetails={setSelectedProduct} />
+            <ProductCard key={product.id} product={product} onViewDetails={onViewProduct} />
           ))}
         </div>
-
-        {selectedProduct && (
-          <ProductDetail product={selectedProduct} onClose={() => setSelectedProduct(null)} />
-        )}
       </div>
     </section>
   )
