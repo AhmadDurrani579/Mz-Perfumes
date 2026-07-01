@@ -23,6 +23,20 @@ test('maps backend product detail fields for the product detail view', () => {
     gender: 'Unisex',
     product_type: 'Eau de Parfum',
     main_image_url: 'https://example.com/janan.png',
+    images: [
+      {
+        id: 'image-1',
+        image_url: 'https://example.com/janan-front.png',
+        sort_order: 1,
+        is_primary: true,
+      },
+      {
+        id: 'image-2',
+        image_url: 'https://example.com/janan-side.png',
+        sort_order: 2,
+        is_primary: false,
+      },
+    ],
     is_featured: true,
     is_active: true,
   })
@@ -45,6 +59,20 @@ test('maps backend product detail fields for the product detail view', () => {
   assert.equal(product.gender, 'Unisex')
   assert.equal(product.productType, 'Eau de Parfum')
   assert.equal(product.image, 'https://example.com/janan.png')
+  assert.deepEqual(product.images, [
+    {
+      id: 'image-1',
+      url: 'https://example.com/janan-front.png',
+      sortOrder: 1,
+      isPrimary: true,
+    },
+    {
+      id: 'image-2',
+      url: 'https://example.com/janan-side.png',
+      sortOrder: 2,
+      isPrimary: false,
+    },
+  ])
   assert.equal(product.isFeatured, true)
   assert.equal(product.isActive, true)
 })
@@ -136,4 +164,21 @@ test('uses variant size id as the selectable variant id when backend variant id 
 
   assert.equal(product.variants[0].id, 'size-10')
   assert.equal(product.variants[1].id, 'size-50')
+})
+
+test('falls back to the main image as the product detail gallery when no image list exists', () => {
+  const product = mapBackendProduct({
+    id: 'product-5',
+    name: 'Single Image Perfume',
+    main_image_url: 'https://example.com/single.png',
+  })
+
+  assert.deepEqual(product.images, [
+    {
+      id: 'main-image',
+      url: 'https://example.com/single.png',
+      sortOrder: 1,
+      isPrimary: true,
+    },
+  ])
 })

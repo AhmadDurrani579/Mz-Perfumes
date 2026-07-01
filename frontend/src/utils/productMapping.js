@@ -35,8 +35,23 @@ function mapProductVariant(variant) {
   }
 }
 
+function mapProductImage(image, index) {
+  return {
+    id: image.id ?? `image-${index + 1}`,
+    url: image.image_url,
+    sortOrder: toNumber(image.sort_order, index + 1),
+    isPrimary: Boolean(image.is_primary),
+  }
+}
+
 export function mapBackendProduct(product, fallbackImage = '') {
   const originalPrice = toNumber(product.actual_price)
+  const mainImage = product.main_image_url || fallbackImage
+  const images = Array.isArray(product.images)
+    ? product.images
+        .filter((image) => image?.image_url)
+        .map(mapProductImage)
+    : []
 
   return {
     id: product.id,
@@ -56,7 +71,15 @@ export function mapBackendProduct(product, fallbackImage = '') {
     size: product.size ?? '',
     gender: product.gender ?? '',
     productType: product.product_type ?? '',
-    image: product.main_image_url || fallbackImage,
+    image: mainImage,
+    images: images.length > 0
+      ? images
+      : [{
+          id: 'main-image',
+          url: mainImage,
+          sortOrder: 1,
+          isPrimary: true,
+        }],
     isFeatured: Boolean(product.is_featured),
     isActive: product.is_active !== false,
     variants: Array.isArray(product.variants) ? product.variants.map(mapProductVariant) : [],

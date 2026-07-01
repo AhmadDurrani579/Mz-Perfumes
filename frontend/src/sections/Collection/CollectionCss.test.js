@@ -39,3 +39,9 @@ test('separates product description from price with space and a divider', () => 
   assert.match(source, /\.product-detail__description-block\s*{[\s\S]*padding:\s*26px 0 24px/)
   assert.match(source, /\.product-detail__description-block\s*{[\s\S]*border-bottom:\s*1px solid #e3dbd0/)
 })
+
+test('styles product detail image thumbnails as a compact gallery', () => {
+  assert.match(source, /\.product-detail__thumbnails\s*{[\s\S]*display:\s*grid/)
+  assert.match(source, /\.product-detail__thumbnail-button\s*{[\s\S]*aspect-ratio:\s*1 \/ 1/)
+  assert.match(source, /\.product-detail__thumbnail-button\[aria-pressed='true'\]\s*{[\s\S]*border-color:\s*#171412/)
+})

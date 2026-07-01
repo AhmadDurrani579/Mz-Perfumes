@@ -24,6 +24,11 @@ function DetailItem({ label, value, status }) {
 export default function ProductDetail({ product, onBack }) {
   const { addItem } = useCart()
   const variants = product.variants ?? []
+  const productImages = product.images?.length
+    ? product.images
+    : [{ id: 'main-image', url: product.image, isPrimary: true }]
+  const [selectedImageId, setSelectedImage] = useState(productImages[0]?.id ?? 'main-image')
+  const selectedImage = productImages.find((image) => image.id === selectedImageId) ?? productImages[0]
   const [selectedVariantId, setSelectedVariantId] = useState(variants[0]?.id ?? '')
   const selectedVariant = variants.find((variant) => variant.id === selectedVariantId) ?? variants[0]
   const selectedProduct = useMemo(() => {
@@ -53,7 +58,28 @@ export default function ProductDetail({ product, onBack }) {
         </button>
 
         <div className="product-detail__media">
-          <img src={product.image} alt={`${product.name} perfume`} />
+          <img
+            className="product-detail__main-image"
+            src={selectedImage.url}
+            alt={`${product.name} perfume`}
+          />
+
+          {productImages.length > 1 && (
+            <div className="product-detail__thumbnails" aria-label="Product images">
+              {productImages.map((image, index) => (
+                <button
+                  className="product-detail__thumbnail-button"
+                  type="button"
+                  key={image.id}
+                  aria-label={`View ${product.name} image ${index + 1}`}
+                  aria-pressed={image.id === selectedImage.id}
+                  onClick={() => setSelectedImage(image.id)}
+                >
+                  <img src={image.url} alt="" />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="product-detail__content">

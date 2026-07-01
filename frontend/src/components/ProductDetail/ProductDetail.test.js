@@ -40,6 +40,15 @@ test('lets customers choose a variant and uses its price stock and size', () => 
   assert.match(source, /selectedVariant\.size/)
 })
 
+test('shows multiple product images as a selectable detail gallery', () => {
+  assert.match(source, /productImages/)
+  assert.match(source, /selectedImage/)
+  assert.match(source, /setSelectedImage/)
+  assert.match(source, /src={selectedImage\.url}/)
+  assert.match(source, /product-detail__thumbnails/)
+  assert.match(source, /productImages\.map/)
+})
+
 test('keeps variant circles limited to size and price text', () => {
   assert.match(source, /<span>{variant\.size}<\/span>/)
   assert.match(source, /<strong>{formatCurrency\(variant\.price\)}<\/strong>/)
