@@ -14,6 +14,15 @@ test('hides the product detail modal scrollbar while preserving overflow scrolli
 test('uses light collection surfaces with gold accents', () => {
   assert.match(source, /\.collection-section\s*{[\s\S]*background:\s*#fbfaf7/)
   assert.match(source, /\.collection-filter\[aria-pressed='true'\]\s*{[\s\S]*background:\s*#ead8bd/)
-  assert.match(source, /\.collection-section \.product-card\s*{[\s\S]*background:\s*#ffffff/)
   assert.match(source, /\.product-detail__panel\s*{[\s\S]*background:\s*#fffdf9/)
+})
+
+test('renders product items without card borders or framed image crops', () => {
+  assert.match(source, /\.collection-section \.product-card\s*{[\s\S]*background:\s*transparent/)
+  assert.match(source, /\.collection-section \.product-card\s*{[\s\S]*border:\s*0/)
+  assert.match(source, /\.collection-section \.product-card:hover\s*{[\s\S]*box-shadow:\s*none/)
+  assert.match(source, /\.product-card__image\s*{[\s\S]*object-fit:\s*contain/)
+  assert.match(source, /\.product-card__title-button\s*{[\s\S]*text-align:\s*center/)
+  assert.match(source, /\.product-card__title-button\s*{[\s\S]*text-transform:\s*uppercase/)
+  assert.match(source, /\.product-card__title-button\s*{[\s\S]*letter-spacing:\s*\.2em/)
 })
