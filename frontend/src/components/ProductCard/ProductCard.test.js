@@ -5,12 +5,17 @@ import { test } from 'node:test'
 const source = readFileSync(new URL('./ProductCard.jsx', import.meta.url), 'utf8')
 const collectionStyles = readFileSync(new URL('../../sections/Collection/Collection.css', import.meta.url), 'utf8')
 
-test('renders a simplified grid card without purchase details', () => {
+test('renders catalog card details without purchase actions', () => {
   assert.doesNotMatch(source, /useCart/)
   assert.doesNotMatch(source, /createWhatsAppUrl/)
-  assert.doesNotMatch(source, /product-card__house/)
-  assert.doesNotMatch(source, /product-card__description/)
-  assert.doesNotMatch(source, /product-card__pricing/)
+  assert.match(source, /product-card__house/)
+  assert.match(source, /product-card__description/)
+  assert.match(source, /product-card__pricing/)
+  assert.match(source, /visibleDescription/)
+  assert.match(source, /product\.description/)
+  assert.doesNotMatch(source, /product\.productType/)
+  assert.match(source, /firstVariant/)
+  assert.match(source, /formatCurrency/)
   assert.doesNotMatch(source, /Add to cart/)
   assert.doesNotMatch(source, /Enquire on WhatsApp/)
 })
@@ -27,8 +32,8 @@ test('supports opening a product detail view from the card', () => {
   assert.match(source, /onViewDetails/)
   assert.match(source, /product-card__media-button/)
   assert.match(source, /product-card__title-button/)
-  assert.doesNotMatch(source, /product-card__details-trigger/)
-  assert.doesNotMatch(source, /product-card__details-text/)
+  assert.match(source, /product-card__details-trigger/)
+  assert.match(source, /VIEW DETAILS/)
 })
 
 test('uses four product cards per desktop row', () => {

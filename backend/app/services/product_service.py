@@ -135,10 +135,14 @@ def delete_product(db: Session, product_id: str):
 
 def get_store_products(db: Session):
     products_result = db.execute(text("""
-        SELECT *
+        SELECT
+            products.*,
+            brands.name AS brand_name
         FROM products
-        WHERE is_active = TRUE
-        ORDER BY created_at DESC
+        LEFT JOIN brands
+            ON brands.id = products.brand_id
+        WHERE products.is_active = TRUE
+        ORDER BY products.created_at DESC
     """))
 
     products = list(products_result.mappings().all())

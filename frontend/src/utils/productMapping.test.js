@@ -77,6 +77,19 @@ test('maps backend product detail fields for the product detail view', () => {
   assert.equal(product.isActive, true)
 })
 
+test('maps nested backend brand objects to the card brand name', () => {
+  const product = mapBackendProduct({
+    id: 'product-brand-object',
+    name: 'Brand Object Perfume',
+    brand: {
+      id: 'brand-object',
+      name: 'Dior',
+    },
+  })
+
+  assert.equal(product.house, 'Dior')
+})
+
 test('uses actual price when backend discount price is zero', () => {
   const product = mapBackendProduct({
     id: 'product-2',

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import ProductCard from '../../components/ProductCard/ProductCard.jsx'
 import fallbackProductImage from '../../assets/images/perfume-hero.png'
 import { getBrands, getProducts } from '../../services/api.js'
@@ -15,10 +15,17 @@ export default function Collection({ onViewProduct }) {
   const [products, setProducts] = useState([])
   const [activeBrandId, setActiveBrandId] = useState(allBrand.id)
   const brandFilters = [allBrand, ...brands]
+  const brandNameById = useMemo(() => {
+    return new Map(brands.map((brand) => [brand.id, brand.name]))
+  }, [brands])
+  const productsWithBrandNames = products.map((product) => ({
+    ...product,
+    house: product.house || brandNameById.get(product.brandId) || '',
+  }))
   const visibleProducts =
     activeBrandId === allBrand.id
-      ? products
-      : products.filter((product) => product.brandId === activeBrandId)
+      ? productsWithBrandNames
+      : productsWithBrandNames.filter((product) => product.brandId === activeBrandId)
 
   useEffect(() => {
     let isMounted = true

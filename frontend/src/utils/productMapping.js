@@ -44,6 +44,13 @@ function mapProductImage(image, index) {
   }
 }
 
+function getBrandName(product) {
+  if (product.brand_name) return product.brand_name
+  if (typeof product.brand === 'string') return product.brand
+  if (product.brand?.name) return product.brand.name
+  return ''
+}
+
 export function mapBackendProduct(product, fallbackImage = '') {
   const originalPrice = toNumber(product.actual_price)
   const mainImage = product.main_image_url || fallbackImage
@@ -58,7 +65,7 @@ export function mapBackendProduct(product, fallbackImage = '') {
     categoryId: product.category_id,
     brandId: product.brand_id,
     branchId: product.branch_id,
-    house: product.brand_name ?? product.brand ?? '',
+    house: getBrandName(product),
     name: product.name,
     slug: product.slug,
     description: product.description ?? '',
