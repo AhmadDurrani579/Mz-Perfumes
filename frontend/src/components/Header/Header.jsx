@@ -3,7 +3,7 @@ import { useCart } from '../../hooks/useCart.js'
 import TopSaleBar from '../../sections/TopSaleBar/TopSaleBar.jsx'
 import { isHeaderScrolled } from '../../utils/headerScroll.js'
 
-export default function Header() {
+export default function Header({ onCollectionClick }) {
   const { items } = useCart()
   const [isScrolled, setIsScrolled] = useState(() => isHeaderScrolled(window.scrollY))
   const [hasSaleOffer, setHasSaleOffer] = useState(false)
@@ -24,7 +24,7 @@ export default function Header() {
       </a>
       <div className="site-header__nav">
         <nav className="primary-nav" aria-label="Primary navigation">
-          <a href="#collection">Collection</a>
+          <a href="#collection" onClick={onCollectionClick}>Collection</a>
           <a href="#craft">House</a>
           <a href="#contact">Contact</a>
         </nav>

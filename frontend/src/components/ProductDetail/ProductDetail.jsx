@@ -21,15 +21,20 @@ function DetailItem({ label, value, status }) {
   )
 }
 
-export default function ProductDetail({ product, onBack }) {
+export default function ProductDetail({ product }) {
   const { addItem } = useCart()
   const variants = product.variants ?? []
   const productImages = product.images?.length
     ? product.images
     : [{ id: 'main-image', url: product.image, isPrimary: true }]
   const [selectedImageId, setSelectedImage] = useState(productImages[0]?.id ?? 'main-image')
-  const selectedImage = productImages.find((image) => image.id === selectedImageId) ?? productImages[0]
+  const selectedImageIndex = Math.max(
+    productImages.findIndex((image) => image.id === selectedImageId),
+    0,
+  )
+  const selectedImage = productImages[selectedImageIndex] ?? productImages[0]
   const [selectedVariantId, setSelectedVariantId] = useState(variants[0]?.id ?? '')
+  const [quantity, setQuantity] = useState(1)
   const selectedVariant = variants.find((variant) => variant.id === selectedVariantId) ?? variants[0]
   const selectedProduct = useMemo(() => {
     if (!selectedVariant) return product
@@ -49,22 +54,67 @@ export default function ProductDetail({ product, onBack }) {
   const stockLabel = selectedProduct.stockQuantity > 0 ? `${selectedProduct.stockQuantity} in stock` : 'Out of stock'
   const stockStatus = selectedProduct.stockQuantity > 0 ? 'available' : 'unavailable'
   const hasDiscount = selectedProduct.originalPrice > selectedProduct.price
+  const hasMultipleImages = productImages.length > 1
+
+  const handlePreviousImage = () => {
+    const previousIndex = (selectedImageIndex - 1 + productImages.length) % productImages.length
+
+    setSelectedImage(productImages[previousIndex].id)
+  }
+
+  const handleNextImage = () => {
+    const nextIndex = (selectedImageIndex + 1) % productImages.length
+
+    setSelectedImage(productImages[nextIndex].id)
+  }
+
+  const handleDecreaseQuantity = () => {
+    setQuantity((current) => Math.max(1, current - 1))
+  }
+
+  const handleIncreaseQuantity = () => {
+    setQuantity((current) => current + 1)
+  }
+
+  const handleAddToCart = () => {
+    Array.from({ length: quantity }).forEach(() => addItem(selectedProduct))
+  }
 
   return (
     <section className="product-detail product-detail-page" aria-labelledby="product-detail-title">
       <article className="product-detail__panel">
-        <button className="product-detail__back-button" type="button" onClick={onBack}>
-          Back to collection
-        </button>
-
         <div className="product-detail__media">
-          <img
-            className="product-detail__main-image"
-            src={selectedImage.url}
-            alt={`${product.name} perfume`}
-          />
+          <div className="product-detail__image-stage">
+            {hasMultipleImages && (
+              <button
+                className="product-detail__slider-button product-detail__slider-button--previous"
+                type="button"
+                aria-label="Previous product image"
+                onClick={handlePreviousImage}
+              >
+                <span aria-hidden="true">‹</span>
+              </button>
+            )}
 
-          {productImages.length > 1 && (
+            <img
+              className="product-detail__main-image"
+              src={selectedImage.url}
+              alt={`${product.name} perfume`}
+            />
+
+            {hasMultipleImages && (
+              <button
+                className="product-detail__slider-button product-detail__slider-button--next"
+                type="button"
+                aria-label="Next product image"
+                onClick={handleNextImage}
+              >
+                <span aria-hidden="true">›</span>
+              </button>
+            )}
+          </div>
+
+          {hasMultipleImages && (
             <div className="product-detail__thumbnails" aria-label="Product images">
               {productImages.map((image, index) => (
                 <button
@@ -127,10 +177,30 @@ export default function ProductDetail({ product, onBack }) {
           </div>
 
           <div className="product-detail__purchase" aria-label="Purchase options">
+            <div className="product-detail__quantity" aria-label="Quantity selector">
+              <button
+                className="product-detail__quantity-button"
+                type="button"
+                aria-label="Decrease quantity"
+                onClick={handleDecreaseQuantity}
+              >
+                −
+              </button>
+              <strong>{quantity}</strong>
+              <button
+                className="product-detail__quantity-button"
+                type="button"
+                aria-label="Increase quantity"
+                onClick={handleIncreaseQuantity}
+              >
+                +
+              </button>
+            </div>
+
             <button
               className="product-card__button product-card__button--primary product-detail__cart-button"
               type="button"
-              onClick={() => addItem(selectedProduct)}
+              onClick={handleAddToCart}
             >
               <span aria-hidden="true">Cart</span>
               Add to cart

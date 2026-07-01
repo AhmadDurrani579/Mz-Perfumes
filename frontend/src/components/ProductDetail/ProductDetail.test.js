@@ -27,7 +27,7 @@ test('keeps only gender in the lower product details', () => {
 test('keeps purchase actions available in product details', () => {
   assert.match(source, /addItem\(selectedProduct\)/)
   assert.match(source, /createWhatsAppUrl\(product\.name\)/)
-  assert.match(source, /onBack/)
+  assert.doesNotMatch(source, /onBack/)
 })
 
 test('lets customers choose a variant and uses its price stock and size', () => {
@@ -47,6 +47,33 @@ test('shows multiple product images as a selectable detail gallery', () => {
   assert.match(source, /src={selectedImage\.url}/)
   assert.match(source, /product-detail__thumbnails/)
   assert.match(source, /productImages\.map/)
+})
+
+test('lets customers move through product images with slider arrows', () => {
+  assert.match(source, /handlePreviousImage/)
+  assert.match(source, /handleNextImage/)
+  assert.match(source, /product-detail__slider-button product-detail__slider-button--previous/)
+  assert.match(source, /product-detail__slider-button product-detail__slider-button--next/)
+  assert.match(source, /aria-label="Previous product image"/)
+  assert.match(source, /aria-label="Next product image"/)
+})
+
+test('lets customers choose quantity before adding to cart', () => {
+  assert.match(source, /quantity/)
+  assert.match(source, /setQuantity/)
+  assert.match(source, /handleDecreaseQuantity/)
+  assert.match(source, /handleIncreaseQuantity/)
+  assert.match(source, /Math\.max\(1, current - 1\)/)
+  assert.match(source, /product-detail__quantity/)
+  assert.match(source, /aria-label="Decrease quantity"/)
+  assert.match(source, /aria-label="Increase quantity"/)
+})
+
+test('adds the selected product to cart once per chosen quantity', () => {
+  assert.match(source, /handleAddToCart/)
+  assert.match(source, /Array\.from\(\{ length: quantity \}/)
+  assert.match(source, /forEach\(\(\) => addItem\(selectedProduct\)\)/)
+  assert.doesNotMatch(source, /onClick=\{\(\) => addItem\(selectedProduct\)\}/)
 })
 
 test('keeps variant circles limited to size and price text', () => {
@@ -72,7 +99,8 @@ test('shows description before price stock and variant choices', () => {
 
 test('renders as a product detail page instead of a modal dialog', () => {
   assert.match(source, /product-detail-page/)
-  assert.match(source, /Back to collection/)
+  assert.doesNotMatch(source, /Back to collection/)
+  assert.doesNotMatch(source, /product-detail__back-button/)
   assert.doesNotMatch(source, /role="dialog"/)
   assert.doesNotMatch(source, /aria-modal/)
   assert.doesNotMatch(source, /product-detail__backdrop/)

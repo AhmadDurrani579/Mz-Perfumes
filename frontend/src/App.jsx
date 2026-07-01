@@ -9,13 +9,21 @@ import Footer from './sections/Footer/Footer.jsx'
 
 export default function App() {
   const [selectedProduct, setSelectedProduct] = useState(null)
+  const handleCollectionNavigation = (event) => {
+    event.preventDefault()
+    setSelectedProduct(null)
+    window.requestAnimationFrame(() => {
+      document.getElementById('collection')?.scrollIntoView()
+      window.history.replaceState(null, '', '#collection')
+    })
+  }
 
   return (
     <>
-      <Header />
+      <Header onCollectionClick={handleCollectionNavigation} />
       <main>
         {selectedProduct ? (
-          <ProductDetail product={selectedProduct} onBack={() => setSelectedProduct(null)} />
+          <ProductDetail product={selectedProduct} />
         ) : (
           <>
             <AnnouncementBar />

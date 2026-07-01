@@ -12,6 +12,11 @@ test('renders the sale offer inside the sticky site header', () => {
   assert.match(source, /site-header__offer/)
 })
 
+test('uses the collection nav link to return from product detail to collection', () => {
+  assert.match(source, /export default function Header\(\{ onCollectionClick \}\)/)
+  assert.match(source, /<a href="#collection" onClick={onCollectionClick}>Collection<\/a>/)
+})
+
 test('only uses the expanded header layout while the sale offer is visible', () => {
   assert.match(source, /const \[hasSaleOffer, setHasSaleOffer\] = useState\(false\)/)
   assert.match(source, /site-header--has-offer/)
