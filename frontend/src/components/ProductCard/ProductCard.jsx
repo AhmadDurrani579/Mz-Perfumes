@@ -1,4 +1,9 @@
 export default function ProductCard({ product, onViewDetails }) {
+  const hasDiscount = product.promotionApplied || product.discount > 0
+  const discountBadgeLabel = product.discount > 0
+    ? `-${product.discount}%`
+    : product.discountLabel
+
   return (
     <article className="product-card">
       <button
@@ -12,6 +17,11 @@ export default function ProductCard({ product, onViewDetails }) {
           src={product.image}
           alt={`${product.name} perfume`}
         />
+        {hasDiscount && (
+          <span className="product-card__discount">
+            {discountBadgeLabel}
+          </span>
+        )}
       </button>
 
       <div className="product-card__content">

@@ -112,6 +112,24 @@
   border-radius: 0;
 }
 
+.product-card__discount {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: inline-flex;
+  min-width: 58px;
+  min-height: 34px;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 13px;
+  color: #fff4f7;
+  background: #7c1d3f;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1;
+}
+
 .product-card__content {
   padding: 28px 0 0;
 }

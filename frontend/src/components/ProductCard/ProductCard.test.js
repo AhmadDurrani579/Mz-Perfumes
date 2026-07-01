@@ -11,9 +11,16 @@ test('renders a simplified grid card without purchase details', () => {
   assert.doesNotMatch(source, /product-card__house/)
   assert.doesNotMatch(source, /product-card__description/)
   assert.doesNotMatch(source, /product-card__pricing/)
-  assert.doesNotMatch(source, /product-card__discount/)
   assert.doesNotMatch(source, /Add to cart/)
   assert.doesNotMatch(source, /Enquire on WhatsApp/)
+})
+
+test('shows a discount badge for promoted products', () => {
+  assert.match(source, /hasDiscount/)
+  assert.match(source, /discountBadgeLabel/)
+  assert.match(source, /product-card__discount/)
+  assert.match(source, /promotionApplied/)
+  assert.match(source, /discountLabel/)
 })
 
 test('supports opening a product detail view from the card', () => {

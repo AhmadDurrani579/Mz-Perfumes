@@ -26,3 +26,10 @@ test('renders product items without card borders or framed image crops', () => {
   assert.match(source, /\.product-card__title-button\s*{[\s\S]*text-transform:\s*uppercase/)
   assert.match(source, /\.product-card__title-button\s*{[\s\S]*letter-spacing:\s*\.2em/)
 })
+
+test('positions the promotion badge over the product image', () => {
+  assert.match(source, /\.product-card__discount\s*{[\s\S]*position:\s*absolute/)
+  assert.match(source, /\.product-card__discount\s*{[\s\S]*top:\s*0/)
+  assert.match(source, /\.product-card__discount\s*{[\s\S]*left:\s*0/)
+  assert.match(source, /\.product-card__discount\s*{[\s\S]*background:\s*#7c1d3f/)
+})
