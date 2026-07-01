@@ -33,3 +33,9 @@ test('positions the promotion badge over the product image', () => {
   assert.match(source, /\.product-card__discount\s*{[\s\S]*left:\s*0/)
   assert.match(source, /\.product-card__discount\s*{[\s\S]*background:\s*#7c1d3f/)
 })
+
+test('separates product description from price with space and a divider', () => {
+  assert.match(source, /\.product-detail__description-block\s*{[\s\S]*margin:\s*28px 0 26px/)
+  assert.match(source, /\.product-detail__description-block\s*{[\s\S]*padding:\s*26px 0 24px/)
+  assert.match(source, /\.product-detail__description-block\s*{[\s\S]*border-bottom:\s*1px solid #e3dbd0/)
+})

@@ -12,6 +12,29 @@ export function getProductPrice(product) {
   return originalPrice
 }
 
+function formatSize(sizeMl) {
+  if (!sizeMl) return ''
+  return `${sizeMl}ML`
+}
+
+function mapProductVariant(variant) {
+  const originalPrice = toNumber(variant.actual_price ?? variant.price)
+  const discountPrice = toNumber(variant.final_price ?? variant.discounted_price)
+  const price = discountPrice > 0 && discountPrice < originalPrice ? discountPrice : originalPrice
+  const sizeMl = toNumber(variant.size_ml)
+  const variantId = variant.id ?? variant.variant_size_id ?? String(sizeMl)
+
+  return {
+    id: variantId,
+    variantSizeId: variant.variant_size_id,
+    sizeMl,
+    size: formatSize(sizeMl),
+    stockQuantity: toNumber(variant.stock_quantity),
+    originalPrice,
+    price,
+  }
+}
+
 export function mapBackendProduct(product, fallbackImage = '') {
   const originalPrice = toNumber(product.actual_price)
 
@@ -36,5 +59,6 @@ export function mapBackendProduct(product, fallbackImage = '') {
     image: product.main_image_url || fallbackImage,
     isFeatured: Boolean(product.is_featured),
     isActive: product.is_active !== false,
+    variants: Array.isArray(product.variants) ? product.variants.map(mapProductVariant) : [],
   }
 }

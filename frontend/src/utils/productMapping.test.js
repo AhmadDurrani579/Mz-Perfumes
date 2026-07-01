@@ -61,3 +61,79 @@ test('uses actual price when backend discount price is zero', () => {
   assert.equal(product.originalPrice, 75)
   assert.equal(product.price, 75)
 })
+
+test('maps backend product variants with size price and stock', () => {
+  const product = mapBackendProduct({
+    id: 'product-3',
+    name: 'Variant Perfume',
+    actual_price: '35',
+    final_price: '30',
+    stock_quantity: 4,
+    size: '50ml',
+    variants: [
+      {
+        id: 'variant-10',
+        variant_size_id: 'size-10',
+        size_ml: '10',
+        stock_quantity: 2,
+        actual_price: '12.50',
+        final_price: '10.00',
+      },
+      {
+        id: 'variant-50',
+        variant_size_id: 'size-50',
+        size_ml: '50',
+        stock_quantity: 0,
+        actual_price: '35.00',
+        final_price: '30.00',
+      },
+    ],
+  })
+
+  assert.deepEqual(product.variants, [
+    {
+      id: 'variant-10',
+      variantSizeId: 'size-10',
+      sizeMl: 10,
+      size: '10ML',
+      stockQuantity: 2,
+      originalPrice: 12.5,
+      price: 10,
+    },
+    {
+      id: 'variant-50',
+      variantSizeId: 'size-50',
+      sizeMl: 50,
+      size: '50ML',
+      stockQuantity: 0,
+      originalPrice: 35,
+      price: 30,
+    },
+  ])
+})
+
+test('uses variant size id as the selectable variant id when backend variant id is absent', () => {
+  const product = mapBackendProduct({
+    id: 'product-4',
+    name: 'Store Product Variant Shape',
+    variants: [
+      {
+        variant_size_id: 'size-10',
+        size_ml: '10',
+        stock_quantity: 2,
+        actual_price: '12.50',
+        final_price: '10.00',
+      },
+      {
+        variant_size_id: 'size-50',
+        size_ml: '50',
+        stock_quantity: 8,
+        actual_price: '35.00',
+        final_price: '30.00',
+      },
+    ],
+  })
+
+  assert.equal(product.variants[0].id, 'size-10')
+  assert.equal(product.variants[1].id, 'size-50')
+})

@@ -1,5 +1,13 @@
+import { useMemo, useState } from 'react'
 import { useCart } from '../../hooks/useCart.js'
 import { createWhatsAppUrl } from '../../utils/productCollection.js'
+
+function formatCurrency(value) {
+  return new Intl.NumberFormat('en-GB', {
+    style: 'currency',
+    currency: 'GBP',
+  }).format(value)
+}
 
 function DetailItem({ label, value, status }) {
   if (!value && value !== 0) return null
@@ -15,8 +23,27 @@ function DetailItem({ label, value, status }) {
 
 export default function ProductDetail({ product, onBack }) {
   const { addItem } = useCart()
-  const stockLabel = product.stockQuantity > 0 ? `${product.stockQuantity} in stock` : 'Out of stock'
-  const stockStatus = product.stockQuantity > 0 ? 'available' : 'unavailable'
+  const variants = product.variants ?? []
+  const [selectedVariantId, setSelectedVariantId] = useState(variants[0]?.id ?? '')
+  const selectedVariant = variants.find((variant) => variant.id === selectedVariantId) ?? variants[0]
+  const selectedProduct = useMemo(() => {
+    if (!selectedVariant) return product
+
+    return {
+      ...product,
+      id: `${product.id}-${selectedVariant.id}`,
+      originalProductId: product.id,
+      selectedVariantId: selectedVariant.id,
+      variantSizeId: selectedVariant.variantSizeId,
+      size: selectedVariant.size,
+      stockQuantity: selectedVariant.stockQuantity,
+      originalPrice: selectedVariant.originalPrice,
+      price: selectedVariant.price,
+    }
+  }, [product, selectedVariant])
+  const stockLabel = selectedProduct.stockQuantity > 0 ? `${selectedProduct.stockQuantity} in stock` : 'Out of stock'
+  const stockStatus = selectedProduct.stockQuantity > 0 ? 'available' : 'unavailable'
+  const hasDiscount = selectedProduct.originalPrice > selectedProduct.price
 
   return (
     <section className="product-detail product-detail-page" aria-labelledby="product-detail-title">
@@ -41,9 +68,35 @@ export default function ProductDetail({ product, onBack }) {
             </p>
           </section>
 
+          <div className="product-detail__price" aria-live="polite">
+            <strong>{formatCurrency(selectedProduct.price)}</strong>
+            {hasDiscount && <del>{formatCurrency(selectedProduct.originalPrice)}</del>}
+          </div>
+
+          <p className={`product-detail__stock is-${stockStatus}`}>{stockLabel}</p>
+
+          {variants.length > 0 && (
+            <div className="product-detail__variants" aria-label="Choose size">
+              {variants.map((variant) => {
+                const isSelected = variant.id === selectedVariant?.id
+
+                return (
+                  <button
+                    className="product-detail__variant-button"
+                    type="button"
+                    key={variant.id}
+                    aria-pressed={isSelected}
+                    onClick={() => setSelectedVariantId(variant.id)}
+                  >
+                    <span>{variant.size}</span>
+                    <strong>{formatCurrency(variant.price)}</strong>
+                  </button>
+                )
+              })}
+            </div>
+          )}
+
           <div className="product-detail__meta" aria-label="Product details">
-            <DetailItem label="SIZE" value={product.size} />
-            <DetailItem label="STOCK" value={stockLabel} status={stockStatus} />
             <DetailItem label="GENDER" value={product.gender} />
           </div>
 
@@ -51,7 +104,7 @@ export default function ProductDetail({ product, onBack }) {
             <button
               className="product-card__button product-card__button--primary product-detail__cart-button"
               type="button"
-              onClick={() => addItem(product)}
+              onClick={() => addItem(selectedProduct)}
             >
               <span aria-hidden="true">Cart</span>
               Add to cart
