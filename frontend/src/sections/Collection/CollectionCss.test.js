@@ -10,3 +10,10 @@ test('hides the product detail modal scrollbar while preserving overflow scrolli
   assert.match(source, /\.product-detail__panel::-webkit-scrollbar/)
   assert.match(source, /display: none/)
 })
+
+test('uses light collection surfaces with gold accents', () => {
+  assert.match(source, /\.collection-section\s*{[\s\S]*background:\s*#fbfaf7/)
+  assert.match(source, /\.collection-filter\[aria-pressed='true'\]\s*{[\s\S]*background:\s*#ead8bd/)
+  assert.match(source, /\.collection-section \.product-card\s*{[\s\S]*background:\s*#ffffff/)
+  assert.match(source, /\.product-detail__panel\s*{[\s\S]*background:\s*#fffdf9/)
+})

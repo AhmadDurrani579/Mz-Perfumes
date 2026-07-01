@@ -3,11 +3,17 @@ import { readFileSync } from 'node:fs'
 import { test } from 'node:test'
 
 const source = readFileSync(new URL('./ProductCard.jsx', import.meta.url), 'utf8')
+const collectionStyles = readFileSync(new URL('../../sections/Collection/Collection.css', import.meta.url), 'utf8')
 
-test('only shows discount badge and crossed price when product has a discount', () => {
-  assert.match(source, /hasDiscount/)
-  assert.match(source, /hasDiscount &&/)
-  assert.match(source, /<del>/)
+test('renders a simplified grid card without purchase details', () => {
+  assert.doesNotMatch(source, /useCart/)
+  assert.doesNotMatch(source, /createWhatsAppUrl/)
+  assert.doesNotMatch(source, /product-card__house/)
+  assert.doesNotMatch(source, /product-card__description/)
+  assert.doesNotMatch(source, /product-card__pricing/)
+  assert.doesNotMatch(source, /product-card__discount/)
+  assert.doesNotMatch(source, /Add to cart/)
+  assert.doesNotMatch(source, /Enquire on WhatsApp/)
 })
 
 test('supports opening a product detail view from the card', () => {
@@ -16,4 +22,8 @@ test('supports opening a product detail view from the card', () => {
   assert.match(source, /product-card__title-button/)
   assert.doesNotMatch(source, /product-card__details-trigger/)
   assert.doesNotMatch(source, /product-card__details-text/)
+})
+
+test('uses four product cards per desktop row', () => {
+  assert.match(collectionStyles, /grid-template-columns:\s*repeat\(4,\s*minmax\(0,\s*1fr\)\)/)
 })

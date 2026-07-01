@@ -50,7 +50,7 @@ function getSubtitleParts(subtitle) {
   return { before, discount, after }
 }
 
-export default function TopSaleBar() {
+export default function TopSaleBar({ onVisibilityChange }) {
   const [banner, setBanner] = useState(null)
   const [currentTime, setCurrentTime] = useState(0)
 
@@ -83,8 +83,13 @@ export default function TopSaleBar() {
     }
   }, [banner?.end_date])
 
-  if (!banner) return null
-  if (currentTime && isBannerExpired(banner, currentTime)) return null
+  const isVisible = Boolean(banner) && !(currentTime && isBannerExpired(banner, currentTime))
+
+  useEffect(() => {
+    onVisibilityChange?.(isVisible)
+  }, [isVisible, onVisibilityChange])
+
+  if (!isVisible) return null
 
   const countdown = getCountdownItems(banner.end_date, currentTime)
   const subtitleParts = getSubtitleParts(banner.subtitle ?? fallbackBanner.subtitle)

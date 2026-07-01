@@ -1,6 +1,6 @@
 .craft-section {
   padding: 112px 24px 150px;
-  background: #100906;
+  background: #ffffff;
 }
 
 .craft-section__inner {
@@ -11,20 +11,20 @@
 .craft-ornament {
   width: 80px;
   margin: 0 auto 31px;
-  border-top: 2px solid #b57b2c;
+  border-top: 2px solid #c99a45;
 }
 
 .craft-ornament::after {
   display: block;
   width: 50px;
   margin: 6px auto 0;
-  border-top: 1px solid #b57b2c;
+  border-top: 1px solid #c99a45;
   content: '';
 }
 
 .craft-section h2 {
   margin: 0;
-  color: #f6eee4;
+  color: #171412;
   font-size: clamp(36px, 4vw, 50px);
   font-weight: 400;
   line-height: 1.15;
@@ -40,7 +40,7 @@
 
 .craft-step__label {
   margin: 0 0 16px;
-  color: #e5b74e;
+  color: #c99a45;
   font-family: var(--font-display);
   font-size: 14px;
   letter-spacing: .15em;
@@ -49,7 +49,7 @@
 
 .craft-step__description {
   margin: 0;
-  color: #f2e6d6;
+  color: #4f4740;
   font-size: 18px;
   line-height: 1.65;
 }

@@ -30,5 +30,7 @@ test('loads top bar title, subtitle, and end date from backend banners', () => {
 test('hides the top bar when the offer has expired', () => {
   assert.match(source, /getActivePromotionBanner/)
   assert.match(source, /setBanner\(activeBanner \?\? null\)/)
-  assert.match(source, /if \(!banner\) return null/)
+  assert.match(source, /const isVisible = Boolean\(banner\) && !\(currentTime && isBannerExpired\(banner, currentTime\)\)/)
+  assert.match(source, /onVisibilityChange\?\.\(isVisible\)/)
+  assert.match(source, /if \(!isVisible\) return null/)
 })

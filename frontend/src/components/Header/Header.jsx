@@ -6,6 +6,7 @@ import { isHeaderScrolled } from '../../utils/headerScroll.js'
 export default function Header() {
   const { items } = useCart()
   const [isScrolled, setIsScrolled] = useState(() => isHeaderScrolled(window.scrollY))
+  const [hasSaleOffer, setHasSaleOffer] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(isHeaderScrolled(window.scrollY))
@@ -16,7 +17,7 @@ export default function Header() {
   }, [])
 
   return (
-    <header className={`site-header${isScrolled ? ' is-scrolled' : ''}`}>
+    <header className={`site-header${hasSaleOffer ? ' site-header--has-offer' : ''}${isScrolled ? ' is-scrolled' : ''}`}>
       <a className="brand" href="#top" aria-label="MZ Perfumse home">
         <span className="brand-mark" aria-hidden="true">MZ</span>
         <span className="brand-name">Perfumes</span>
@@ -29,7 +30,7 @@ export default function Header() {
         </nav>
       </div>
       <div className="site-header__offer">
-        <TopSaleBar />
+        <TopSaleBar onVisibilityChange={setHasSaleOffer} />
       </div>
       <button className="cart-button" type="button" aria-label="Open shopping cart">
         <svg className="cart-icon" viewBox="0 0 32 32" aria-hidden="true">
