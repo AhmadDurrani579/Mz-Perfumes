@@ -28,6 +28,36 @@ function isSameCartItem(first, second) {
   return first.cart_key === second.cart_key
 }
 
+export function getNextCartItems(items, item) {
+  const currentItems = items.map(normalizeCartItem)
+  const nextItem = normalizeCartItem(item)
+  const matchingItem = currentItems.find((currentItem) => isSameCartItem(currentItem, nextItem))
+
+  return matchingItem
+    ? currentItems.map((currentItem) => (
+        isSameCartItem(currentItem, nextItem)
+          ? { ...currentItem, quantity: currentItem.quantity + nextItem.quantity }
+          : currentItem
+      ))
+    : [...currentItems, nextItem]
+}
+
+export function getRemainingCartItems(items, productId, size, name = '', cartKey = '') {
+  return items.map(normalizeCartItem).filter((item) => (
+    cartKey || name
+      ? item.cart_key !== (cartKey || createCartKey({ product_id: productId, name, size }))
+      : item.product_id !== String(productId) || item.size !== size
+  ))
+}
+
+export function getQuantityAdjustedCartItems(items, cartKey, change) {
+  return items.map(normalizeCartItem).map((item) => (
+    item.cart_key === cartKey
+      ? { ...item, quantity: Math.max(1, item.quantity + change) }
+      : item
+  ))
+}
+
 export function getCartItems(storage = getDefaultStorage()) {
   if (!storage) return []
 
@@ -49,28 +79,11 @@ export function saveCartItems(storage = getDefaultStorage(), items) {
 }
 
 export function addCartItem(storage = getDefaultStorage(), item) {
-  const currentItems = getCartItems(storage)
-  const nextItem = normalizeCartItem(item)
-  const matchingItem = currentItems.find((currentItem) => isSameCartItem(currentItem, nextItem))
-  const nextItems = matchingItem
-    ? currentItems.map((currentItem) => (
-        isSameCartItem(currentItem, nextItem)
-          ? { ...currentItem, quantity: currentItem.quantity + nextItem.quantity }
-          : currentItem
-      ))
-    : [...currentItems, nextItem]
-
-  return saveCartItems(storage, nextItems)
+  return saveCartItems(storage, getNextCartItems(getCartItems(storage), item))
 }
 
 export function removeCartItem(storage = getDefaultStorage(), productId, size, name = '', cartKey = '') {
-  const nextItems = getCartItems(storage).filter((item) => (
-    cartKey || name
-      ? item.cart_key !== (cartKey || createCartKey({ product_id: productId, name, size }))
-      : item.product_id !== String(productId) || item.size !== size
-  ))
-
-  return saveCartItems(storage, nextItems)
+  return saveCartItems(storage, getRemainingCartItems(getCartItems(storage), productId, size, name, cartKey))
 }
 
 export function clearCartItems(storage = getDefaultStorage()) {

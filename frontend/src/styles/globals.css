@@ -305,19 +305,42 @@ button { font: inherit; }
   gap: 26px;
   margin-top: 14px;
 }
-.shopping-bag__quantity {
+.shopping-bag__quantity-control {
   display: inline-grid;
-  min-width: 62px;
-  min-height: 42px;
-  place-items: center;
-  color: var(--color-text);
+  grid-template-columns: 38px 42px 38px;
+  min-height: 44px;
+  overflow: hidden;
   background: #fffdf9;
   border: 1px solid #d8cdbc;
   border-radius: 4px;
+}
+.shopping-bag__quantity {
+  display: grid;
+  place-items: center;
+  color: var(--color-text);
   font-size: 20px;
   font-weight: 800;
 }
-.shopping-bag__item-actions button {
+.shopping-bag__quantity-button {
+  display: grid;
+  min-width: 38px;
+  min-height: 42px;
+  place-items: center;
+  background: transparent;
+  border: 0;
+  color: #8a8174;
+  cursor: pointer;
+  font-size: 25px;
+  line-height: 1;
+}
+.shopping-bag__quantity-button:hover:not(:disabled) {
+  color: #8e6524;
+}
+.shopping-bag__quantity-button:disabled {
+  color: #d1c7bb;
+  cursor: not-allowed;
+}
+.shopping-bag__item-actions > button {
   background: transparent;
   border: 0;
   color: #8e6524;

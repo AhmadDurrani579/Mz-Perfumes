@@ -5,6 +5,8 @@ import {
   addCartItem,
   clearCartItems,
   getCartItems,
+  getNextCartItems,
+  getQuantityAdjustedCartItems,
   removeCartItem,
 } from './cartStorage.js'
 
@@ -55,6 +57,33 @@ test('adds a different product or size after the existing item', () => {
   }
 
   assert.deepEqual(addCartItem(storage, nextItem), [sampleItem, nextItem])
+})
+
+test('calculates the next cart items without mutating the existing cart', () => {
+  const nextItem = {
+    cart_key: '789|Rose Oud|50ML',
+    product_id: '789',
+    name: 'Rose Oud',
+    size: '50ML',
+    price: 5000,
+    quantity: 1,
+    image: 'https://example.com/rose.jpg',
+  }
+  const currentItems = [sampleItem]
+
+  assert.deepEqual(getNextCartItems(currentItems, nextItem), [sampleItem, nextItem])
+  assert.deepEqual(currentItems, [sampleItem])
+})
+
+test('adjusts cart item quantity without going below one', () => {
+  assert.deepEqual(
+    getQuantityAdjustedCartItems([sampleItem], sampleItem.cart_key, 1),
+    [{ ...sampleItem, quantity: 3 }],
+  )
+  assert.deepEqual(
+    getQuantityAdjustedCartItems([{ ...sampleItem, quantity: 1 }], sampleItem.cart_key, -1),
+    [{ ...sampleItem, quantity: 1 }],
+  )
 })
 
 test('does not merge different product names that share an id and size', () => {

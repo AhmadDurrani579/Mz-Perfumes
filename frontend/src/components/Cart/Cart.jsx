@@ -20,7 +20,7 @@ const emptyCustomer = {
 }
 
 export default function Cart({ onClose }) {
-  const { items, removeItem, clearCart, cartTotal } = useCart()
+  const { items, increaseItem, decreaseItem, removeItem, clearCart, cartTotal } = useCart()
   const [showCheckoutForm, setShowCheckoutForm] = useState(false)
   const [customer, setCustomer] = useState(emptyCustomer)
   const [status, setStatus] = useState('idle')
@@ -85,7 +85,26 @@ export default function Cart({ onClose }) {
                   <p>{item.size}</p>
                   <strong>{formatCurrency(item.price)}</strong>
                   <div className="shopping-bag__item-actions">
-                    <span className="shopping-bag__quantity">{item.quantity}</span>
+                    <div className="shopping-bag__quantity-control" aria-label={`Quantity for ${item.name}`}>
+                      <button
+                        type="button"
+                        className="shopping-bag__quantity-button"
+                        onClick={() => decreaseItem(item.cart_key)}
+                        disabled={item.quantity <= 1}
+                        aria-label={`Decrease quantity for ${item.name}`}
+                      >
+                        -
+                      </button>
+                      <span className="shopping-bag__quantity">{item.quantity}</span>
+                      <button
+                        type="button"
+                        className="shopping-bag__quantity-button"
+                        onClick={() => increaseItem(item.cart_key)}
+                        aria-label={`Increase quantity for ${item.name}`}
+                      >
+                        +
+                      </button>
+                    </div>
                     <button type="button" onClick={() => removeItem(item.product_id, item.size, item.name, item.cart_key)}>
                       Remove
                     </button>

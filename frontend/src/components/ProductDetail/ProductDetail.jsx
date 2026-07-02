@@ -210,7 +210,7 @@ export default function ProductDetail({ product }) {
               onClick={handleAddToCart}
             >
               <span aria-hidden="true">Cart</span>
-              Add to cart
+              Add to BAG
             </button>
 
             <a
