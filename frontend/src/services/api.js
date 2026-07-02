@@ -21,3 +21,10 @@ export function getProducts() {
 export function getBanners() {
   return apiRequest('/api/banners/')
 }
+
+export function createOrder(order) {
+  return apiRequest('/api/orders/', {
+    method: 'POST',
+    body: JSON.stringify(order),
+  })
+}

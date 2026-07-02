@@ -25,7 +25,7 @@ test('keeps only gender in the lower product details', () => {
 })
 
 test('keeps purchase actions available in product details', () => {
-  assert.match(source, /addItem\(selectedProduct\)/)
+  assert.match(source, /addItem\(cartItem\)/)
   assert.match(source, /createWhatsAppUrl\(product\.name\)/)
   assert.doesNotMatch(source, /onBack/)
 })
@@ -69,10 +69,17 @@ test('lets customers choose quantity before adding to cart', () => {
   assert.match(source, /aria-label="Increase quantity"/)
 })
 
-test('adds the selected product to cart once per chosen quantity', () => {
+test('adds the selected product variant to cart with the chosen quantity', () => {
   assert.match(source, /handleAddToCart/)
-  assert.match(source, /Array\.from\(\{ length: quantity \}/)
-  assert.match(source, /forEach\(\(\) => addItem\(selectedProduct\)\)/)
+  assert.match(source, /product_id: product\.id/)
+  assert.match(source, /name: product\.name/)
+  assert.match(source, /size: selectedProduct\.size/)
+  assert.match(source, /price: selectedProduct\.price/)
+  assert.match(source, /quantity/)
+  assert.match(source, /image: selectedImage\?\.url/)
+  assert.match(source, /cart_key: `\$\{product\.id\}\|\$\{product\.name\}\|\$\{selectedProduct\.size\}`/)
+  assert.match(source, /addItem\(cartItem\)/)
+  assert.doesNotMatch(source, /Array\.from\(\{ length: quantity \}/)
   assert.doesNotMatch(source, /onClick=\{\(\) => addItem\(selectedProduct\)\}/)
 })
 

@@ -13,8 +13,9 @@ test('renders the sale offer inside the sticky site header', () => {
 })
 
 test('uses the collection nav link to return from product detail to collection', () => {
-  assert.match(source, /export default function Header\(\{ onCollectionClick \}\)/)
+  assert.match(source, /export default function Header\(\{ onCollectionClick, onCartClick \}\)/)
   assert.match(source, /<a href="#collection" onClick={onCollectionClick}>Collection<\/a>/)
+  assert.match(source, /onClick={onCartClick}/)
 })
 
 test('only uses the expanded header layout while the sale offer is visible', () => {

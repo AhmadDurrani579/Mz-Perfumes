@@ -77,7 +77,17 @@ export default function ProductDetail({ product }) {
   }
 
   const handleAddToCart = () => {
-    Array.from({ length: quantity }).forEach(() => addItem(selectedProduct))
+    const cartItem = {
+      product_id: product.id,
+      name: product.name,
+      size: selectedProduct.size,
+      price: selectedProduct.price,
+      quantity,
+      image: selectedImage?.url ?? product.image,
+      cart_key: `${product.id}|${product.name}|${selectedProduct.size}`,
+    }
+
+    addItem(cartItem)
   }
 
   return (
