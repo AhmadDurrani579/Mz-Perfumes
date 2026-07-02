@@ -137,12 +137,9 @@ export default function ProductDetail({ product }) {
           <h2 id="product-detail-title">{product.name}</h2>
           {product.productType && <p className="product-detail__type">{product.productType}</p>}
 
-          <section className="product-detail__description-block" aria-labelledby="product-detail-description-title">
-            <h3 id="product-detail-description-title">DESCRIPTION</h3>
-            <p className="product-detail__description">
-              {product.description || 'Premium fragrance selected for the Mz Essence collection.'}
-            </p>
-          </section>
+          <a className="product-detail__description-link" href="#product-detail-description">
+            DESCRIPTION
+          </a>
 
           <div className="product-detail__price" aria-live="polite">
             <strong>{formatCurrency(selectedProduct.price)}</strong>
@@ -216,6 +213,15 @@ export default function ProductDetail({ product }) {
             </a>
           </div>
         </div>
+
+        <section
+          id="product-detail-description"
+          className="product-detail__description-section"
+        >
+          <p className="product-detail__description">
+            {product.description || 'Premium fragrance selected for the Mz Essence collection.'}
+          </p>
+        </section>
       </article>
     </section>
   )

@@ -82,19 +82,35 @@ test('keeps variant circles limited to size and price text', () => {
   assert.doesNotMatch(source, /<em>{variant\.stockQuantity/)
 })
 
-test('shows description before price stock and variant choices', () => {
-  const descriptionIndex = source.indexOf('product-detail__description-block')
+test('shows a description jump link before price stock and variant choices', () => {
+  const descriptionLinkIndex = source.indexOf('product-detail__description-link')
   const priceIndex = source.indexOf('product-detail__price')
   const stockIndex = source.indexOf('product-detail__stock')
   const variantsIndex = source.indexOf('product-detail__variants')
 
-  assert.ok(descriptionIndex > -1)
+  assert.ok(descriptionLinkIndex > -1)
   assert.ok(priceIndex > -1)
   assert.ok(stockIndex > -1)
   assert.ok(variantsIndex > -1)
-  assert.ok(descriptionIndex < priceIndex)
-  assert.ok(descriptionIndex < stockIndex)
-  assert.ok(descriptionIndex < variantsIndex)
+  assert.ok(descriptionLinkIndex < priceIndex)
+  assert.ok(descriptionLinkIndex < stockIndex)
+  assert.ok(descriptionLinkIndex < variantsIndex)
+  assert.match(source, /href="#product-detail-description"/)
+})
+
+test('moves the full description content below purchase options', () => {
+  const purchaseIndex = source.indexOf('product-detail__purchase')
+  const lowerDescriptionIndex = source.indexOf('id="product-detail-description"')
+
+  assert.ok(purchaseIndex > -1)
+  assert.ok(lowerDescriptionIndex > -1)
+  assert.ok(lowerDescriptionIndex > purchaseIndex)
+})
+
+test('does not repeat the description title in the lower description section', () => {
+  assert.doesNotMatch(source, /aria-labelledby="product-detail-description-title"/)
+  assert.doesNotMatch(source, /id="product-detail-description-title"/)
+  assert.doesNotMatch(source, /<h3[^>]*>DESCRIPTION<\/h3>/)
 })
 
 test('renders as a product detail page instead of a modal dialog', () => {
